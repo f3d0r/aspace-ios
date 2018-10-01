@@ -1,0 +1,15 @@
+PODS:
+  - Mapbox-iOS-SDK (4.4.1)
+  - SHSearchBar (1.5.0)
+
+DEPENDENCIES:
+  - Mapbox-iOS-SDK (~> 4.4)
+  - SHSearchBar
+
+SPEC CHECKSUMS:
+  Mapbox-iOS-SDK: e6a4f236c77f914ca2e19b929c6cc6b077ba1c4c
+  SHSearchBar: cbec42d44f7ecfc823e492430a1a981cf784f46c
+
+PODFILE CHECKSUM: 8aa04856e1ad924421647c1e9dc61f1331cfd86e
+
+COCOAPODS: 1.4.0
