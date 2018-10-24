@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		14A812B84D001B80FB738420 /* Pods_aspaceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B60524654B1F4F3F44729D3 /* Pods_aspaceTests.framework */; };
 		40F8AE9DECA31BA559CE1248 /* Pods_aspaceUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C74AD52E455D78BC4E6B7460 /* Pods_aspaceUITests.framework */; };
-		A343365621641266005CCDD8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A343365521641266005CCDD8 /* Assets.xcassets */; };
+		A341042E21813CDD0087D6B2 /* DriveBikeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A341042D21813CDD0087D6B2 /* DriveBikeResponse.swift */; };
 		A34D5B0C2162BAB200A9082E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34D5B0B2162BAB200A9082E /* AppDelegate.swift */; };
-		A34D5B0E2162BAB200A9082E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34D5B0D2162BAB200A9082E /* ViewController.swift */; };
+		A34D5B0E2162BAB200A9082E /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34D5B0D2162BAB200A9082E /* MapController.swift */; };
 		A34D5B112162BAB200A9082E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A34D5B0F2162BAB200A9082E /* Main.storyboard */; };
 		A34D5B162162BAB200A9082E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A34D5B142162BAB200A9082E /* LaunchScreen.storyboard */; };
 		A34D5B212162BAB200A9082E /* aspaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34D5B202162BAB200A9082E /* aspaceTests.swift */; };
@@ -19,6 +19,7 @@
 		A3694B432163295B003354DD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A3694B422163295B003354DD /* Settings.bundle */; };
 		A3694B48216333D1003354DD /* LoginPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3694B47216333D1003354DD /* LoginPhoneViewController.swift */; };
 		A3694B4A2163589D003354DD /* LoginPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3694B492163589D003354DD /* LoginPinViewController.swift */; };
+		A3C1FDA8216C095C00F312FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A3C1FDA7216C095C00F312FB /* Assets.xcassets */; };
 		F33F8EE70AC56D1F1CC8E60E /* Pods_aspace.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13AEA7C8E3A20257428EF201 /* Pods_aspace.framework */; };
 /* End PBXBuildFile section */
 
@@ -46,10 +47,10 @@
 		4FDA950CF8C7522874D6F878 /* Pods-aspaceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aspaceTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-aspaceTests/Pods-aspaceTests.release.xcconfig"; sourceTree = "<group>"; };
 		586288A931D4F085594A1067 /* Pods-aspace.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aspace.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aspace/Pods-aspace.debug.xcconfig"; sourceTree = "<group>"; };
 		8F2FE2A6DE0E039C05995D08 /* Pods-aspaceUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aspaceUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aspaceUITests/Pods-aspaceUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		A343365521641266005CCDD8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A341042D21813CDD0087D6B2 /* DriveBikeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveBikeResponse.swift; sourceTree = "<group>"; };
 		A34D5B082162BAB200A9082E /* aspace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = aspace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A34D5B0B2162BAB200A9082E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		A34D5B0D2162BAB200A9082E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		A34D5B0D2162BAB200A9082E /* MapController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
 		A34D5B102162BAB200A9082E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A34D5B152162BAB200A9082E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A34D5B172162BAB200A9082E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -62,6 +63,7 @@
 		A3694B422163295B003354DD /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		A3694B47216333D1003354DD /* LoginPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPhoneViewController.swift; sourceTree = "<group>"; };
 		A3694B492163589D003354DD /* LoginPinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPinViewController.swift; sourceTree = "<group>"; };
+		A3C1FDA7216C095C00F312FB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C74AD52E455D78BC4E6B7460 /* Pods_aspaceUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_aspaceUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D33C1E8338CFA04889AFEFED /* Pods-aspaceUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aspaceUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-aspaceUITests/Pods-aspaceUITests.release.xcconfig"; sourceTree = "<group>"; };
 		FBB1E139358FA9420F4F2189 /* Pods-aspaceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aspaceTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aspaceTests/Pods-aspaceTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -147,9 +149,10 @@
 				A34D5B0B2162BAB200A9082E /* AppDelegate.swift */,
 				A3694B47216333D1003354DD /* LoginPhoneViewController.swift */,
 				A3694B492163589D003354DD /* LoginPinViewController.swift */,
-				A343365521641266005CCDD8 /* Assets.xcassets */,
-				A34D5B0D2162BAB200A9082E /* ViewController.swift */,
+				A3C1FDA7216C095C00F312FB /* Assets.xcassets */,
+				A34D5B0D2162BAB200A9082E /* MapController.swift */,
 				A34D5B0F2162BAB200A9082E /* Main.storyboard */,
+				A341042D21813CDD0087D6B2 /* DriveBikeResponse.swift */,
 				A34D5B142162BAB200A9082E /* LaunchScreen.storyboard */,
 				A34D5B172162BAB200A9082E /* Info.plist */,
 			);
@@ -289,7 +292,7 @@
 			files = (
 				A3694B432163295B003354DD /* Settings.bundle in Resources */,
 				A34D5B162162BAB200A9082E /* LaunchScreen.storyboard in Resources */,
-				A343365621641266005CCDD8 /* Assets.xcassets in Resources */,
+				A3C1FDA8216C095C00F312FB /* Assets.xcassets in Resources */,
 				A34D5B112162BAB200A9082E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -496,11 +499,17 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-aspace/Pods-aspace-resources.sh",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
+				"${PODS_ROOT}/GooglePlacePicker/Frameworks/GooglePlacePicker.framework/Resources/GooglePlacePicker.bundle",
+				"${PODS_ROOT}/GooglePlaces/Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle",
 				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/Intercom.bundle",
 				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/IntercomTranslations.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GooglePlacePicker.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GooglePlaces.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Intercom.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IntercomTranslations.bundle",
 			);
@@ -516,10 +525,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A34D5B0E2162BAB200A9082E /* ViewController.swift in Sources */,
+				A34D5B0E2162BAB200A9082E /* MapController.swift in Sources */,
 				A34D5B0C2162BAB200A9082E /* AppDelegate.swift in Sources */,
 				A3694B4A2163589D003354DD /* LoginPinViewController.swift in Sources */,
 				A3694B48216333D1003354DD /* LoginPhoneViewController.swift in Sources */,
+				A341042E21813CDD0087D6B2 /* DriveBikeResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -696,13 +706,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Z7JYTJ746J;
+				DEVELOPMENT_TEAM = RHB5YFR7LS;
 				INFOPLIST_FILE = aspace/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = trya.space.aspace;
+				PRODUCT_BUNDLE_IDENTIFIER = space.trya;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -715,13 +725,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Z7JYTJ746J;
+				DEVELOPMENT_TEAM = RHB5YFR7LS;
 				INFOPLIST_FILE = aspace/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = trya.space.aspace;
+				PRODUCT_BUNDLE_IDENTIFIER = space.trya;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";

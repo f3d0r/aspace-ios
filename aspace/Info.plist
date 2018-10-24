@@ -18,6 +18,11 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>comgooglemaps</string>
+		<string>comgooglemaps-x-callback</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MGLMapboxAccessToken</key>
@@ -27,9 +32,11 @@
 	<key>MGLMapboxMetricsEnabledSettingShownInApp</key>
 	<string>YES</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Shows your location on the map and helps improve OpenStreetMap.</string>
+	<string>Shows your location on the map for faster experience.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Send photos help us resolve app issues! :)</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Use your microphone to help us resolve app issues! :)</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -42,11 +49,6 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-        <string>comgooglemaps</string>
-        <string>comgooglemaps-x-callback</string>
-    </array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

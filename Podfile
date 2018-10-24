@@ -19,6 +19,9 @@ target 'aspace' do
     pod 'paper-onboarding'
     pod 'CircleMenu'
     pod 'SwiftLint'
+    pod 'GooglePlaces'
+    pod 'GooglePlacePicker'
+    pod 'GoogleMaps'
 
     target 'aspaceTests' do
         inherit! :search_paths

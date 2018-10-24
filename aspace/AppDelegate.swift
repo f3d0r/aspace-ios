@@ -24,6 +24,7 @@ import Alamofire
 import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
+import GooglePlaces
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate {
@@ -44,6 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
+        
+        GMSPlacesClient.provideAPIKey("***REMOVED***")
         return true
     }
     

@@ -11,7 +11,6 @@ import Foundation
 import MapKit
 import CoreLocation
 import Mapbox
-import SHSearchBar
 import MapboxGeocoder
 import DropDown
 import CircleMenu
@@ -22,10 +21,11 @@ import MapboxNavigation
 import MapboxDirections
 import GooglePlaces
 
-class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDelegate, MGLMapViewDelegate, GMSAutocompleteViewControllerDelegate  {
+class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDelegate, MGLMapViewDelegate  {
     
     var locationManager: CLLocationManager!
     
+    @IBOutlet weak var destinationSelect: UIButton!
     @IBOutlet weak var searchBar: UISearchBar!
     
     @IBOutlet weak var mapView: MGLMapView!
@@ -49,9 +49,12 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        searchBar.delegate = self
-        
         mapView.delegate = self
+        
+        destinationSelect.sizeToFit()
+        destinationSelect.titleLabel!.minimumScaleFactor = 0.5;
+        destinationSelect.titleLabel!.adjustsFontSizeToFitWidth = true;
+
         
 //        button.contentVerticalAlignment = .fill
 //        button.contentHorizontalAlignment = .fill
@@ -59,10 +62,10 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
         
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
-        dropDown.anchorView = searchBar
-        dropDown.bottomOffset = CGPoint(x: 0, y:(dropDown.anchorView?.plainView.bounds.height)!)
-        
-        dropDown.show()
+//        dropDown.anchorView = searchBar
+//        dropDown.bottomOffset = CGPoint(x: 0, y:(dropDown.anchorView?.plainView.bounds.height)!)
+//
+//        dropDown.show()
         
         locationManager = CLLocationManager()
         locationManager.delegate = self
@@ -73,22 +76,22 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
         mapView.logoView.isHidden = true
         mapView.attributionButton.isHidden = true
         
-        searchBar.barTintColor = UIColor.white
-        searchBar.tintColor = UIColor.white
-        searchBar.backgroundColor = UIColor.clear
+//        searchBar.barTintColor = UIColor.white
+//        searchBar.tintColor = UIColor.white
+//        searchBar.backgroundColor = UIColor.clear
+//
+//        let textFieldInsideSearchBar = searchBar.value(forKey: "searchField") as? UITextField
         
-        let textFieldInsideSearchBar = searchBar.value(forKey: "searchField") as? UITextField
-        
-        textFieldInsideSearchBar?.tintColor = UIColor.white
-        textFieldInsideSearchBar?.backgroundColor = UIColor.white
-        textFieldInsideSearchBar?.textColor = UIColor.black
-        
-        dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
-            self.searchBar.text = item
-            self.dropDown.hide()
-            self.mapView.becomeFirstResponder()
-            self.zoomToSearchText(searchItem: item);
-        }
+//        textFieldInsideSearchBar?.tintColor = UIColor.white
+//        textFieldInsideSearchBar?.backgroundColor = UIColor.white
+//        textFieldInsideSearchBar?.textColor = UIColor.black
+//
+//        dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
+//            self.searchBar.text = item
+//            self.dropDown.hide()
+//            self.mapView.becomeFirstResponder()
+//            self.zoomToSearchText(searchItem: item);
+//        }
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(hideKeyBoard))
         
@@ -129,23 +132,23 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
         }
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if (searchText.count > 0) {
-            let options = ForwardGeocodeOptions(query: searchText)
-            options.focalLocation = CLLocation(latitude: currentLat, longitude: currentLng)
-            _ = geocoder.geocode(options) { (placemarks, attribution, error) in
-                var resultsArray = [String]()
-                let placeMarks = placemarks
-                for currentPM in placeMarks! {
-                    resultsArray.append(currentPM.qualifiedName ?? "")
-                }
-                self.dropDown.dataSource = resultsArray
-                self.dropDown.show()
-            }
-        } else {
-            self.dropDown.hide()
-        }
-    }
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//        if (searchText.count > 0) {
+//            let options = ForwardGeocodeOptions(query: searchText)
+//            options.focalLocation = CLLocation(latitude: currentLat, longitude: currentLng)
+//            _ = geocoder.geocode(options) { (placemarks, attribution, error) in
+//                var resultsArray = [String]()
+//                let placeMarks = placemarks
+//                for currentPM in placeMarks! {
+//                    resultsArray.append(currentPM.qualifiedName ?? "")
+//                }
+//                self.dropDown.dataSource = resultsArray
+//                self.dropDown.show()
+//            }
+//        } else {
+//            self.dropDown.hide()
+//        }
+//    }
     
     func zoomToSearchText(searchItem: String) {
         if (searchItem.count > 0) {
@@ -168,8 +171,8 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
                 self.mapView.addAnnotation(marker)
                 
                 
-                let origin = CLLocationCoordinate2DMake(self.currentLat, self.currentLng)
-                let destination = CLLocationCoordinate2DMake(coordinate!.latitude, coordinate!.longitude)
+                let _ = CLLocationCoordinate2DMake(self.currentLat, self.currentLng) //origin
+                let _ = CLLocationCoordinate2DMake(coordinate!.latitude, coordinate!.longitude) //destination
                 
                 var url = "https://routing.trya.space/v1/get_drive_bike_route?origin_lat=" + String(self.currentLat) + "&origin_lng=" + String(self.currentLng);
                 url += "&dest_lat=" + String(coordinate!.latitude) + "&dest_lng=" + String(coordinate!.longitude);
@@ -182,9 +185,6 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
                             let driveSegment = json["res_content"]["routes"][0][0]["directions"]["routes"][0]["geometry"].rawString();
                             let walkSegment = json["res_content"]["routes"][0][1]["directions"]["routes"][0]["geometry"].rawString();
                             let bikeSegment = json["res_content"]["routes"][0][2]["directions"]["routes"][0]["geometry"].rawString();
-                            print(driveSegment);
-                            print(walkSegment);
-                            print(bikeSegment);
                             if let newData = driveSegment!.data(using: String.Encoding.utf8) {
                                 print(newData)
                                 self.drawPolyline(geoJson: newData, lineColor: UIColor.blue, layerName: "driveSegment")
@@ -258,6 +258,9 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
         self.mapView.setCamera(camera, withDuration: 2, animationTimingFunction: CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut))
     }
     
+    func getRoute(fromLatitude: Double, fromLongitude: Double, toLatitude: Double, toLongitude: Double) {
+        
+    }
     
     func drawPolyline(geoJson: Data, lineColor: UIColor, layerName: String) {
         // Add our GeoJSON data to the map as an MGLGeoJSONSource.
@@ -288,4 +291,38 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
         //        style.addLayer(dashedLayer)
         //        style.insertLayer(casingLayer, below: layer)
     }
+    @IBAction func destPressed(_ sender: Any) {
+        let autocompleteController = GMSAutocompleteViewController()
+        autocompleteController.delegate = self
+        present(autocompleteController, animated: true, completion: nil)
+    }
+}
+
+extension MapController: GMSAutocompleteViewControllerDelegate {
+    
+    // Handle the user's selection.
+    func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
+        getRoute(fromLatitude: currentLat, fromLongitude: currentLng, toLatitude: place.coordinate.latitude, toLongitude: place.coordinate.longitude)
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
+        // TODO: handle the error.
+        print("Error: ", error.localizedDescription)
+    }
+    
+    // User canceled the operation.
+    func wasCancelled(_ viewController: GMSAutocompleteViewController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    // Turn the network activity indicator on and off again.
+    func didRequestAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+    }
+    
+    func didUpdateAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+    }
+    
 }

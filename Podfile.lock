@@ -6,6 +6,16 @@ PODS:
   - CircleMenu (4.0.0)
   - DropDown (2.3.6)
   - DynamicBlurView (3.0.1)
+  - GoogleMaps (2.7.0):
+    - GoogleMaps/Maps (= 2.7.0)
+  - GoogleMaps/Base (2.7.0)
+  - GoogleMaps/Maps (2.7.0):
+    - GoogleMaps/Base
+  - GooglePlacePicker (2.7.0):
+    - GoogleMaps (= 2.7.0)
+    - GooglePlaces (= 2.7.0)
+  - GooglePlaces (2.7.0):
+    - GoogleMaps/Base (= 2.7.0)
   - Instabug (8.0.14)
   - Intercom (5.1.7)
   - Mapbox-iOS-SDK (4.4.1)
@@ -45,6 +55,9 @@ DEPENDENCIES:
   - Alamofire-SwiftyJSON
   - CircleMenu
   - DropDown
+  - GoogleMaps
+  - GooglePlacePicker
+  - GooglePlaces
   - Instabug
   - Intercom
   - Mapbox-iOS-SDK
@@ -63,6 +76,9 @@ SPEC CHECKSUMS:
   CircleMenu: 49a0aa5567985ec9de4cf1faa5a5970c67096e24
   DropDown: e8bfbce001b2e6b7e8abfdd42e12b565712d84f4
   DynamicBlurView: b1df5415f9bd31897549e5d7077e5ec120a4d636
+  GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848
+  GooglePlacePicker: 59ea44db173c58486ad6123993e81feefcbce9c3
+  GooglePlaces: 3d06e6c99654545b4738ce49648745779c25f2ef
   Instabug: c47ed58a9a70d37bc8310376535818cbcfb2b57e
   Intercom: 71e3fd5356818ab4aee7370c2640c2e77b687a39
   Mapbox-iOS-SDK: e6a4f236c77f914ca2e19b929c6cc6b077ba1c4c
@@ -83,6 +99,6 @@ SPEC CHECKSUMS:
   SwiftyJSON: 070dabdcb1beb81b247c65ffa3a79dbbfb3b48aa
   Turf: 9763a5a2d7da05dfdd5ed56aeb0414b291b0fee1
 
-PODFILE CHECKSUM: e96ef4078eaca9dd42828a88e7f419d6bcdac2f9
+PODFILE CHECKSUM: 31f05699a8d4c2dde1bacab4d3019778bab93af5
 
 COCOAPODS: 1.4.0

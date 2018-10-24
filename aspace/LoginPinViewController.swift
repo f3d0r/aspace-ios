@@ -12,12 +12,11 @@ class LoginPinViewController: UIViewController {
         
         pinCodeEditText.keyboardType = .numberPad
         let defaults = UserDefaults.standard
-        let userPhoneNumber = defaults.string(forKey: "USER_PHONE_NUMBER")
-        print("USERPHONE: ", userPhoneNumber)
+        let _ = defaults.string(forKey: "USER_PHONE_NUMBER") //userPhoneNumber
     }
     @IBAction func confirmPIN(_ sender: Any) {
         let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let newViewController = storyBoard.instantiateViewController(withIdentifier: "mapViewController") as! ViewController
+        let newViewController = storyBoard.instantiateViewController(withIdentifier: "mapViewController") as! MapController
         self.present(newViewController, animated: true, completion: nil)
     }
 }
