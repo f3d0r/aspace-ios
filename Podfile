@@ -29,6 +29,7 @@ target 'aspace' do
     pod 'SwiftMessages'
     pod 'LGButton'
     pod 'PromiseKit/CorePromise'
+    pod 'PromiseKit/Alamofire'
 
     target 'aspaceTests' do
         inherit! :search_paths

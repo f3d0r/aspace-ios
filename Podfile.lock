@@ -58,6 +58,9 @@ PODS:
   - Polyline (4.2.0)
   - PopupDialog (0.9.1):
     - DynamicBlurView (~> 3.0.1)
+  - PromiseKit/Alamofire (6.5.2):
+    - Alamofire (~> 4.0)
+    - PromiseKit/CorePromise
   - PromiseKit/CorePromise (6.5.2)
   - RxCocoa (4.3.1):
     - RxSwift (~> 4.0)
@@ -100,6 +103,7 @@ DEPENDENCIES:
   - PinCodeTextField
   - PMSuperButton
   - PopupDialog
+  - PromiseKit/Alamofire
   - PromiseKit/CorePromise
   - SHSearchBar
   - SwiftLint
@@ -149,6 +153,6 @@ SPEC CHECKSUMS:
   Turf: 9763a5a2d7da05dfdd5ed56aeb0414b291b0fee1
   TwicketSegmentedControl: 6d7a4cf243657e0ac3f00d06d873a25334c04042
 
-PODFILE CHECKSUM: 89f366267d7d1ea103b993da46f33c10ac2fd8b2
+PODFILE CHECKSUM: 578f4cd9d73931de0101d396fd46f68dc0a9121f
 
 COCOAPODS: 1.4.0
