@@ -128,22 +128,32 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ek8-av-2lS" customClass="MGLMapView">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="832"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="734"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nek-2E-VNj" userLabel="Destination Select Button">
-                                        <rect key="frame" x="141" y="58" width="93" height="36"/>
-                                        <color key="backgroundColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <state key="normal" title="Where To?">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Th-Dw-djJ" userLabel="Where to Button" customClass="LGButton" customModule="LGButton">
+                                        <rect key="frame" x="167" y="401" width="120" height="60"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="cornerRadius" value="10"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="titleString" value="Where to?"/>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
+                                                <color key="value" red="0.24313725489999999" green="0.7725490196" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="18"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="leftIconString" value="location-arrow"/>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="leftIconColor">
+                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="leftIconFontName" value="fa"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="titleFontSize">
+                                                <real key="value" value="20"/>
+                                            </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="destPressed:" destination="3WM-yY-yEc" eventType="touchUpInside" id="pDC-Ee-VcA"/>
-                                        </connections>
-                                    </button>
+                                    </view>
+                                    <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OuZ-kI-V3u" userLabel="Directions Container">
+                                        <rect key="frame" x="62" y="47" width="250" height="250"/>
+                                    </containerView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
@@ -153,17 +163,22 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="OuZ-kI-V3u" firstAttribute="bottom" secondItem="rKb-AG-Sad" secondAttribute="bottom" id="2Of-9a-21i"/>
+                            <constraint firstItem="4Th-Dw-djJ" firstAttribute="centerX" secondItem="rKb-AG-Sad" secondAttribute="centerX" id="6lQ-b1-xns"/>
+                            <constraint firstItem="4Th-Dw-djJ" firstAttribute="top" secondItem="rKb-AG-Sad" secondAttribute="top" constant="20" id="7NR-oL-XCp"/>
+                            <constraint firstItem="OuZ-kI-V3u" firstAttribute="trailing" secondItem="Ek8-av-2lS" secondAttribute="trailing" constant="15" id="A9f-c4-jiZ"/>
+                            <constraint firstItem="Ek8-av-2lS" firstAttribute="top" secondItem="rKb-AG-Sad" secondAttribute="top" id="GoE-iZ-1nV"/>
                             <constraint firstItem="Ek8-av-2lS" firstAttribute="trailing" secondItem="qxv-DN-vvc" secondAttribute="trailing" id="NEb-E2-f0R"/>
-                            <constraint firstItem="Ek8-av-2lS" firstAttribute="bottom" secondItem="qxv-DN-vvc" secondAttribute="bottom" constant="20" symbolic="YES" id="Zm4-jL-kWM"/>
+                            <constraint firstItem="OuZ-kI-V3u" firstAttribute="top" secondItem="rKb-AG-Sad" secondAttribute="bottom" constant="-100" id="PTC-x1-z2Y"/>
+                            <constraint firstItem="Ek8-av-2lS" firstAttribute="bottom" secondItem="rKb-AG-Sad" secondAttribute="bottom" id="Zm4-jL-kWM"/>
                             <constraint firstItem="Ek8-av-2lS" firstAttribute="leading" secondItem="qxv-DN-vvc" secondAttribute="leading" id="apN-Ur-Jt6"/>
-                            <constraint firstItem="Ek8-av-2lS" firstAttribute="top" secondItem="qxv-DN-vvc" secondAttribute="top" id="cNz-Ao-v0F" userLabel="Map View.bottom = bottom"/>
-                            <constraint firstItem="Nek-2E-VNj" firstAttribute="bottom" secondItem="rKb-AG-Sad" secondAttribute="top" constant="50" id="gAC-iV-IUO"/>
-                            <constraint firstItem="Nek-2E-VNj" firstAttribute="centerX" secondItem="Ek8-av-2lS" secondAttribute="centerX" id="ilp-BZ-4br"/>
+                            <constraint firstItem="OuZ-kI-V3u" firstAttribute="leading" secondItem="Ek8-av-2lS" secondAttribute="leading" constant="-15" id="eaK-hA-iSa"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="rKb-AG-Sad"/>
                     </view>
                     <connections>
-                        <outlet property="destinationSelect" destination="Nek-2E-VNj" id="2T4-KU-Lak"/>
+                        <outlet property="destinationSelected" destination="4Th-Dw-djJ" id="tlG-cF-60d"/>
+                        <outlet property="directionsController" destination="OuZ-kI-V3u" id="cec-dI-cCa"/>
                         <outlet property="mapView" destination="Ek8-av-2lS" id="XhL-GH-kgB"/>
                         <outlet property="searchDisplayController" destination="BM8-FT-ASl" id="u9k-Xa-wMs"/>
                     </connections>
@@ -264,6 +279,20 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tiz-gQ-FCM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1591.2" y="-33.251231527093594"/>
+        </scene>
+        <!--Directions View Controller-->
+        <scene sceneID="KjQ-Uv-89m">
+            <objects>
+                <viewController storyboardIdentifier="DirectionsViewController" id="gcr-Xw-PhM" customClass="DirectionsViewController" customModule="aspace" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="LlD-9m-yd9">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="StW-am-365" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1194" y="-33"/>
         </scene>
     </scenes>
     <resources>

@@ -25,6 +25,7 @@ import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
 import GooglePlaces
+import CardParts
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate {
@@ -47,6 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         locationManager.requestWhenInUseAuthorization()
         
         GMSPlacesClient.provideAPIKey("***REMOVED***")
+        CardPartsMintTheme().apply()
         return true
     }
     
@@ -76,12 +78,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         if status != .authorizedWhenInUse {return}
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
-        let locValue: CLLocationCoordinate2D = manager.location!.coordinate
-        if (CLLocationCoordinate2DIsValid(locValue)) {
-            print("Coordinate valid");
-        } else {
-            print("Coordinate invalid");
-        }
     }
 }
 

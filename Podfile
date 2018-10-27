@@ -4,32 +4,37 @@ use_frameworks!
 
 target 'aspace' do
 
+    pod 'Alamofire'
+    pod 'Alamofire-SwiftyJSON'
+    pod 'AlamofireObjectMapper'
+    pod 'CardParts'
+    pod 'CircleMenu'
+    pod 'DropDown'
+    pod 'GoogleMaps'
+    pod 'GooglePlacePicker'
+    pod 'GooglePlaces'
+    pod 'Instabug'
+    pod 'Intercom'
     pod 'Mapbox-iOS-SDK'
     pod 'MapboxGeocoder.swift'
     pod 'MapboxNavigation'
-    pod 'SHSearchBar'
-    pod 'Alamofire'
-    pod 'Alamofire-SwiftyJSON'
-    pod 'PopupDialog'
-    pod 'Instabug'
-    pod 'Intercom'
-    pod 'PinCodeTextField'
-    pod 'PhoneNumberKit'
-    pod 'DropDown'
     pod 'paper-onboarding'
-    pod 'CircleMenu'
+    pod 'PhoneNumberKit'
+    pod 'PinCodeTextField'
+    pod 'PMSuperButton'
+    pod 'PopupDialog'
+    pod 'SHSearchBar'
     pod 'SwiftLint'
-    pod 'GooglePlaces'
-    pod 'GooglePlacePicker'
-    pod 'GoogleMaps'
+    pod 'TwicketSegmentedControl'
+    pod 'SwiftMessages'
+    pod 'LGButton'
+    pod 'PromiseKit/CorePromise'
 
     target 'aspaceTests' do
         inherit! :search_paths
-        # Pods for testing
     end
 
     target 'aspaceUITests' do
         inherit! :search_paths
-        # Pods for testing
     end
 end

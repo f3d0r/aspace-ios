@@ -12,7 +12,6 @@ import MapKit
 import CoreLocation
 import Mapbox
 import MapboxGeocoder
-import DropDown
 import CircleMenu
 import SwiftyJSON
 import Alamofire
@@ -20,15 +19,22 @@ import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
 import GooglePlaces
+import TwicketSegmentedControl
+import AlamofireObjectMapper
+import PMSuperButton
+import CardParts
+import LGButton
 
-class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDelegate, MGLMapViewDelegate  {
+class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDelegate, MGLMapViewDelegate, TwicketSegmentedControlDelegate  {
     
     var locationManager: CLLocationManager!
     
-    @IBOutlet weak var destinationSelect: UIButton!
-    @IBOutlet weak var searchBar: UISearchBar!
+    let cellPercentWidth: CGFloat = 0.7
+    
     
     @IBOutlet weak var mapView: MGLMapView!
+    @IBOutlet weak var destinationSelected: LGButton!
+    @IBOutlet weak var directionsController: UIView!
     
     var currLocationButton: UIButton!
     
@@ -37,118 +43,116 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
     var currentLat : Double!
     var currentLng : Double!
     
-    let dropDown = DropDown()
-    
     var currLocationEnabled = false
     
     let geocoder = Geocoder(accessToken: "pk.eyJ1IjoiZmVkb3ItYXNwYWNlIiwiYSI6ImNqbXJ6Zzc4NjFxdzYzcHFjYmNrb2Q2MGUifQ.mltUs2Zs9ufl4IOhHbD8BA")
     
     var directionsRoute: Route?
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //MARK: MAP VIEW INITIALIZATION
         mapView.delegate = self
-        
-        destinationSelect.sizeToFit()
-        destinationSelect.titleLabel!.minimumScaleFactor = 0.5;
-        destinationSelect.titleLabel!.adjustsFontSizeToFitWidth = true;
-
-        
-//        button.contentVerticalAlignment = .fill
-//        button.contentHorizontalAlignment = .fill
-//        button.imageEdgeInsets = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 1.0, right: 1.0)
-        
+        mapView.isRotateEnabled = false;
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        mapView.setCenter(CLLocationCoordinate2D(latitude: 59.31, longitude: 18.06), zoomLevel: 9, animated: false)
         
-//        dropDown.anchorView = searchBar
-//        dropDown.bottomOffset = CGPoint(x: 0, y:(dropDown.anchorView?.plainView.bounds.height)!)
-//
-//        dropDown.show()
+        
+        var tapGesture = UITapGestureRecognizer()
+        tapGesture = UITapGestureRecognizer(target: self, action: #selector(MapController.myviewTapped(_:)))
+        tapGesture.numberOfTapsRequired = 1
+        tapGesture.numberOfTouchesRequired = 1
+        destinationSelected.addGestureRecognizer(tapGesture)
+        destinationSelected.isUserInteractionEnabled = true
         
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         
-        mapView.setCenter(CLLocationCoordinate2D(latitude: 59.31, longitude: 18.06), zoomLevel: 9, animated: false)
+        let titles = ["Park/Bike", "Park/Walk", "Park/Direct"]
+        let frame = CGRect(x: 0, y: mapView.frame.height-120, width: view.frame.width, height: 40)
+        let segmentedControl = TwicketSegmentedControl(frame: frame)
+        segmentedControl.setSegmentItems(titles)
+        segmentedControl.delegate = self
+        segmentedControl.isHidden = false
+        segmentedControl.sliderBackgroundColor = UIColor(red:0.24, green:0.77, blue:1.00, alpha:1.0)
         
-        mapView.logoView.isHidden = true
-        mapView.attributionButton.isHidden = true
-        
-//        searchBar.barTintColor = UIColor.white
-//        searchBar.tintColor = UIColor.white
-//        searchBar.backgroundColor = UIColor.clear
-//
-//        let textFieldInsideSearchBar = searchBar.value(forKey: "searchField") as? UITextField
-        
-//        textFieldInsideSearchBar?.tintColor = UIColor.white
-//        textFieldInsideSearchBar?.backgroundColor = UIColor.white
-//        textFieldInsideSearchBar?.textColor = UIColor.black
-//
-//        dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
-//            self.searchBar.text = item
-//            self.dropDown.hide()
-//            self.mapView.becomeFirstResponder()
-//            self.zoomToSearchText(searchItem: item);
-//        }
+        mapView.addSubview(segmentedControl)
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(hideKeyBoard))
         
         self.view.addGestureRecognizer(tap)
         
-//        currLocationButton = UIButton(type: .custom)
-//        currLocationButton.frame = CGRect(x: 50, y: 50, width: 50, height: 50)
-//        currLocationButton.layer.cornerRadius = 0.5 * currLocationButton.bounds.size.width
-//        currLocationButton.clipsToBounds = true
-//        currLocationButton.setImage(UIImage(named:"curr_loc_disabled"), for: .normal)
-//        currLocationButton.backgroundColor = UIColor.white
-//        currLocationButton.addTarget(self, action: #selector(currLocationButtonPressed), for: .touchUpInside)
-//
-//        mapView.addSubview(currLocationButton)
-//
-//        currLocationButton.translatesAutoresizingMaskIntoConstraints = false
-//        currLocationButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
-//        currLocationButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -60).isActive = true
-//
-//        currLocationButton.contentVerticalAlignment = .fill
-//        currLocationButton.contentHorizontalAlignment = .fill
-//        currLocationButton.imageEdgeInsets = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 1.0, right: 1.0)
+        //        currLocationButton = UIButton(type: .custom)
+        //        currLocationButton.frame = CGRect(x: 50, y: 50, width: 50, height: 50)
+        //        currLocationButton.layer.cornerRadius = 0.5 * currLocationButton.bounds.size.width
+        //        currLocationButton.clipsToBounds = true
+        //        currLocationButton.setImage(UIImage(named:"curr_loc_disabled"), for: .normal)
+        //        currLocationButton.backgroundColor = UIColor.white
+        //        currLocationButton.addTarget(self, action: #selector(currLocationButtonPressed), for: .touchUpInside)
+        //
+        //        mapView.addSubview(currLocationButton)
+        //
+        //        currLocationButton.translatesAutoresizingMaskIntoConstraints = false
+        //        currLocationButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        //        currLocationButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -60).isActive = true
+        //
+        //        currLocationButton.contentVerticalAlignment = .fill
+        //        currLocationButton.contentHorizontalAlignment = .fill
+        //        currLocationButton.imageEdgeInsets = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 1.0, right: 1.0)
+        
+        let directionsViewController = self.storyboard?.instantiateViewController(withIdentifier: "DirectionsViewController") as! DirectionsViewController
+        directionsViewController.view.frame = directionsController.bounds
+        directionsController.addSubview(directionsViewController.view)
+        addChild(directionsViewController)
+        directionsViewController.didMove(toParent: self)
     }
+    
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status != .authorizedWhenInUse {return}
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
-        let locValue: CLLocationCoordinate2D = manager.location!.coordinate
-        if (!initMapLocation) {
-            mapView.setCenter(CLLocationCoordinate2D(latitude: locValue.latitude, longitude: locValue.longitude), zoomLevel: 15, animated: false)
-            initMapLocation = true
+        if let locValue: CLLocationCoordinate2D = manager.location?.coordinate {
+            if (!initMapLocation) {
+                mapView.setCenter(CLLocationCoordinate2D(latitude: locValue.latitude, longitude: locValue.longitude), zoomLevel: 15, animated: false)
+                initMapLocation = true
+            }
+            currentLat = locValue.latitude
+            currentLng = locValue.longitude
+            if (currLocationEnabled) {
+                moveMapToLatLng(latitude: currentLat, longitude: currentLng)
+            }
+        } else {
+            if (!initMapLocation) {
+                mapView.setCenter(CLLocationCoordinate2D(latitude: 0, longitude: 0), zoomLevel: 15, animated: false)
+                initMapLocation = true
+            }
+            if (currLocationEnabled) {
+                moveMapToLatLng(latitude: currentLat, longitude: currentLng)
+            }
         }
-        currentLat = locValue.latitude
-        currentLng = locValue.longitude
-        if (currLocationEnabled) {
-            moveMapToLatLng(latitude: currentLat, longitude: currentLng)
-        }
+        
     }
     
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        if (searchText.count > 0) {
-//            let options = ForwardGeocodeOptions(query: searchText)
-//            options.focalLocation = CLLocation(latitude: currentLat, longitude: currentLng)
-//            _ = geocoder.geocode(options) { (placemarks, attribution, error) in
-//                var resultsArray = [String]()
-//                let placeMarks = placemarks
-//                for currentPM in placeMarks! {
-//                    resultsArray.append(currentPM.qualifiedName ?? "")
-//                }
-//                self.dropDown.dataSource = resultsArray
-//                self.dropDown.show()
-//            }
-//        } else {
-//            self.dropDown.hide()
-//        }
-//    }
+    //    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    //        if (searchText.count > 0) {
+    //            let options = ForwardGeocodeOptions(query: searchText)
+    //            options.focalLocation = CLLocation(latitude: currentLat, longitude: currentLng)
+    //            _ = geocoder.geocode(options) { (placemarks, attribution, error) in
+    //                var resultsArray = [String]()
+    //                let placeMarks = placemarks
+    //                for currentPM in placeMarks! {
+    //                    resultsArray.append(currentPM.qualifiedName ?? "")
+    //                }
+    //                self.dropDown.dataSource = resultsArray
+    //                self.dropDown.show()
+    //            }
+    //        } else {
+    //            self.dropDown.hide()
+    //        }
+    //    }
     
     func zoomToSearchText(searchItem: String) {
         if (searchItem.count > 0) {
@@ -258,8 +262,22 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
         self.mapView.setCamera(camera, withDuration: 2, animationTimingFunction: CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut))
     }
     
-    func getRoute(fromLatitude: Double, fromLongitude: Double, toLatitude: Double, toLongitude: Double) {
+    func getRoute(fromLat: Double, fromLng: Double, toLat: Double, toLng: Double, routeType: String) {
+        var urlString =  "https://routing.trya.space/v1/" + routeType + "?origin_lat="
+        urlString += fromLat.toString() + "&origin_lng=";
+        urlString += fromLng.toString() + "&dest_lng="
+        urlString += toLng.toString() + "&dest_lat="
+        urlString += toLat.toString() + "&session_starting=1&access_code=07fa1e185317402c043cff15c13da745&device_id=e2fad51a-da1c-40b1-9c7a-e8a12fbb3cb5"
+        print("HERE")
+        print(urlString)
         
+        Alamofire.request(urlString, method: .post).responseDriveBikeResponse { response in
+            if let driveDirect = response.result.value {
+                print(driveDirect.resInfo?.code)
+            } else {
+                print("HERE OTHER")
+            }
+        }
     }
     
     func drawPolyline(geoJson: Data, lineColor: UIColor, layerName: String) {
@@ -288,13 +306,20 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
                                        [14: 2, 18: 20])
         
         style.addLayer(layer)
+        
         //        style.addLayer(dashedLayer)
         //        style.insertLayer(casingLayer, below: layer)
     }
-    @IBAction func destPressed(_ sender: Any) {
+    
+    func didSelect(_ segmentIndex: Int) {
+        print("options selected\(segmentIndex)")
+    }
+    
+    @objc func myviewTapped(_ sender: UITapGestureRecognizer) {
         let autocompleteController = GMSAutocompleteViewController()
         autocompleteController.delegate = self
         present(autocompleteController, animated: true, completion: nil)
+        destinationSelected.isLoading = true
     }
 }
 
@@ -302,7 +327,7 @@ extension MapController: GMSAutocompleteViewControllerDelegate {
     
     // Handle the user's selection.
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
-        getRoute(fromLatitude: currentLat, fromLongitude: currentLng, toLatitude: place.coordinate.latitude, toLongitude: place.coordinate.longitude)
+        getRoute(fromLat: currentLat, fromLng: currentLng, toLat: place.coordinate.latitude, toLng: place.coordinate.longitude, routeType: "get_drive_bike_route");
         dismiss(animated: true, completion: nil)
     }
     
@@ -325,4 +350,10 @@ extension MapController: GMSAutocompleteViewControllerDelegate {
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
     
+}
+
+extension Double {
+    func toString() -> String {
+        return String(format: "%.10f",self)
+    }
 }
