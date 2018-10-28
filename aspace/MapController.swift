@@ -24,6 +24,9 @@ import AlamofireObjectMapper
 import PMSuperButton
 import CardParts
 import LGButton
+import Async
+import Intercom
+import SwiftMessages
 
 class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDelegate, MGLMapViewDelegate, TwicketSegmentedControlDelegate  {
     
@@ -31,10 +34,10 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
     
     let cellPercentWidth: CGFloat = 0.7
     
-    
     @IBOutlet weak var mapView: MGLMapView!
-    @IBOutlet weak var destinationSelected: LGButton!
+    @IBOutlet weak var whereToButton: LGButton!
     @IBOutlet weak var directionsController: UIView!
+    @IBOutlet weak var helpButton: LGButton!
     
     var currLocationButton: UIButton!
     
@@ -49,6 +52,8 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
     
     var directionsRoute: Route?
     
+    var viewingRoute = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -59,18 +64,27 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
         mapView.setCenter(CLLocationCoordinate2D(latitude: 59.31, longitude: 18.06), zoomLevel: 9, animated: false)
         
         
-        var tapGesture = UITapGestureRecognizer()
-        tapGesture = UITapGestureRecognizer(target: self, action: #selector(MapController.myviewTapped(_:)))
-        tapGesture.numberOfTapsRequired = 1
-        tapGesture.numberOfTouchesRequired = 1
-        destinationSelected.addGestureRecognizer(tapGesture)
-        destinationSelected.isUserInteractionEnabled = true
+        
+        var whereToButtonPressedGesture = UITapGestureRecognizer()
+        whereToButtonPressedGesture = UITapGestureRecognizer(target: self, action: #selector(MapController.myviewTapped(_:)))
+        whereToButtonPressedGesture.numberOfTapsRequired = 1
+        whereToButtonPressedGesture.numberOfTouchesRequired = 1
+        whereToButton.addGestureRecognizer(whereToButtonPressedGesture)
+        whereToButton.isUserInteractionEnabled = true
+        
+        var helpPressedGesture = UITapGestureRecognizer()
+        helpPressedGesture = UITapGestureRecognizer(target: self, action: #selector(MapController.helpPressed(_:)))
+        helpPressedGesture.numberOfTapsRequired = 1
+        helpPressedGesture.numberOfTouchesRequired = 1
+        helpButton.addGestureRecognizer(helpPressedGesture)
+        helpButton.isUserInteractionEnabled = true
+        
         
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         
-        let titles = ["Park/Bike", "Park/Walk", "Park/Direct"]
+        let titles = ["Park & Bike", "Park & Walk", "Closest Parking"]
         let frame = CGRect(x: 0, y: mapView.frame.height-120, width: view.frame.width, height: 40)
         let segmentedControl = TwicketSegmentedControl(frame: frame)
         segmentedControl.setSegmentItems(titles)
@@ -263,19 +277,55 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
     }
     
     func getRoute(fromLat: Double, fromLng: Double, toLat: Double, toLng: Double, routeType: String) {
-        var urlString =  "https://routing.trya.space/v1/" + routeType + "?origin_lat="
-        urlString += fromLat.toString() + "&origin_lng=";
-        urlString += fromLng.toString() + "&dest_lng="
-        urlString += toLng.toString() + "&dest_lat="
-        urlString += toLat.toString() + "&session_starting=1&access_code=07fa1e185317402c043cff15c13da745&device_id=e2fad51a-da1c-40b1-9c7a-e8a12fbb3cb5"
-        print("HERE")
-        print(urlString)
+        let group = DispatchGroup()
         
-        Alamofire.request(urlString, method: .post).responseDriveBikeResponse { response in
-            if let driveDirect = response.result.value {
-                print(driveDirect.resInfo?.code)
+        let driveBikeUrl = getRoutingURL(routeType: "get_drive_bike_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: "07fa1e185317402c043cff15c13da745", deviceId: "e2fad51a-da1c-40b1-9c7a-e8a12fbb3cb5")
+        
+        let driveWalkUrl = getRoutingURL(routeType: "get_drive_walk_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: "07fa1e185317402c043cff15c13da745", deviceId: "e2fad51a-da1c-40b1-9c7a-e8a12fbb3cb5")
+        
+        let driveDirectUrl = getRoutingURL(routeType: "get_drive_direct_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: "07fa1e185317402c043cff15c13da745", deviceId: "e2fad51a-da1c-40b1-9c7a-e8a12fbb3cb5")
+        
+        group.enter()
+        var driveBikeResponse: DriveBikeResponse!
+        var driveWalkResponse: DriveBikeResponse!
+        var driveDirectResponse: DriveBikeResponse!
+        Alamofire.request(driveBikeUrl, method: .post).responseDriveBikeResponse { response in
+            if let driveBike = response.result.value {
+                driveBikeResponse = driveBike
+                group.leave()
             } else {
-                print("HERE OTHER")
+                self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
+            }
+        }
+        group.enter()
+        Alamofire.request(driveWalkUrl, method: .post).responseDriveBikeResponse { response in
+            if let driveWalk = response.result.value {
+                driveWalkResponse = driveWalk
+                group.leave()
+            } else {
+                self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
+            }
+        }
+        group.enter()
+        Alamofire.request(driveDirectUrl, method: .post).responseDriveBikeResponse { response in
+            if let driveDirect = response.result.value {
+                driveDirectResponse = driveDirect
+                group.leave()
+            } else {
+                self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
+            }
+        }
+        
+        group.notify(queue: .main) {
+            self.whereToButton.isLoading = false
+            if (driveBikeResponse.resInfo?.code == 42 || driveWalkResponse.resInfo?.code == 42 || driveDirectResponse.resInfo?.code == 42) {
+                self.sendErrorMessage(title: "Error", message: "Looks like we there's no parking available with aspace here. Please try a different address.")
+            } else if (driveBikeResponse.resInfo?.code == 45 || driveWalkResponse.resInfo?.code == 45 || driveDirectResponse.resInfo?.code == 45) {
+                self.sendErrorMessage(title: "Error", message: "Looks like we don't have routing available there. Please try a different address.")
+            } else if (driveBikeResponse.resInfo?.code != 31 || driveWalkResponse.resInfo?.code != 31 || driveDirectResponse.resInfo?.code != 31) {
+                self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
+            } else {
+                print("OK!")
             }
         }
     }
@@ -311,6 +361,31 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
         //        style.insertLayer(casingLayer, below: layer)
     }
     
+    func getRoutingURL(routeType: String, originLat: Double, originLng: Double, destLat: Double, destLng: Double, sessionStarting: String, accessCode: String, deviceId: String) -> String {
+        var urlString =  "https://routing.trya.space/v1/" + routeType + "?origin_lat="
+        urlString += originLat.toString() + "&origin_lng=";
+        urlString += originLng.toString() + "&dest_lng="
+        urlString += destLng.toString() + "&dest_lat="
+        urlString += destLat.toString() + "&session_starting="
+        urlString += sessionStarting + "&access_code="
+        urlString += accessCode + "&device_id="
+        urlString += deviceId
+        return urlString
+    }
+    
+    func sendErrorMessage(title: String, message: String) {
+        let error = MessageView.viewFromNib(layout: .cardView)
+        error.configureTheme(.error)
+        error.configureContent(title: title, body: message)
+        error.button?.setTitle("Dismiss", for: .normal)
+        
+        var errorConfig = SwiftMessages.defaultConfig
+        errorConfig.presentationStyle = .top
+        errorConfig.duration = .seconds(seconds: 4.0)
+        
+        SwiftMessages.show(config: errorConfig, view: error)
+    }
+    
     func didSelect(_ segmentIndex: Int) {
         print("options selected\(segmentIndex)")
     }
@@ -319,7 +394,11 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
         let autocompleteController = GMSAutocompleteViewController()
         autocompleteController.delegate = self
         present(autocompleteController, animated: true, completion: nil)
-        destinationSelected.isLoading = true
+        whereToButton.isLoading = true
+    }
+    
+    @objc func helpPressed(_ sender: UITapGestureRecognizer) {
+        Intercom.presentMessenger()
     }
 }
 
@@ -327,17 +406,18 @@ extension MapController: GMSAutocompleteViewControllerDelegate {
     
     // Handle the user's selection.
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
-        getRoute(fromLat: currentLat, fromLng: currentLng, toLat: place.coordinate.latitude, toLng: place.coordinate.longitude, routeType: "get_drive_bike_route");
         dismiss(animated: true, completion: nil)
+        getRoute(fromLat: currentLat, fromLng: currentLng, toLat: place.coordinate.latitude, toLng: place.coordinate.longitude, routeType: "get_drive_bike_route");
     }
     
     func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
         // TODO: handle the error.
-        print("Error: ", error.localizedDescription)
+        
     }
     
     // User canceled the operation.
     func wasCancelled(_ viewController: GMSAutocompleteViewController) {
+        self.whereToButton.isLoading = false
         dismiss(animated: true, completion: nil)
     }
     

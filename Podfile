@@ -30,6 +30,8 @@ target 'aspace' do
     pod 'LGButton'
     pod 'PromiseKit/CorePromise'
     pod 'PromiseKit/Alamofire'
+    pod 'AsyncSwift'
+    pod 'SideMenu'
 
     target 'aspaceTests' do
         inherit! :search_paths

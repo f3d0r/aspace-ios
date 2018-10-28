@@ -38,7 +38,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         // Override point for customization after application launch.
         Intercom.setApiKey("ios_sdk-9db3815efc7d39e14289e016a1c346e45ea530be", forAppId:"***REMOVED***")
         Intercom.registerUnidentifiedUser();
-        Intercom.setLauncherVisible(true)
         Instabug.start(withToken: "9a0192e6ba004fe7b5c5fe2a79710f56", invocationEvents: [.shake, .screenshot])
         
         DropDown.startListeningToKeyboard()
