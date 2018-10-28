@@ -74,7 +74,6 @@ PODS:
     - RxSwift (~> 4.0)
   - RxSwift (4.3.1)
   - SHSearchBar (1.5.0)
-  - SideMenu (5.0.2)
   - Solar (2.1.0)
   - SwiftLint (0.27.0)
   - SwiftMessages (6.0.0):
@@ -109,7 +108,6 @@ DEPENDENCIES:
   - PromiseKit/Alamofire
   - PromiseKit/CorePromise
   - SHSearchBar
-  - SideMenu
   - SwiftLint
   - SwiftMessages
   - TwicketSegmentedControl
@@ -151,7 +149,6 @@ SPEC CHECKSUMS:
   RxGesture: c278eb05b187abd47e11e65464ae4de53ab71d95
   RxSwift: fe0fd770a43acdb7d0a53da411c9b892e69bb6e4
   SHSearchBar: cbec42d44f7ecfc823e492430a1a981cf784f46c
-  SideMenu: e5094f0b2e7d9609e100a90ae69025abd994f882
   Solar: 2dc6e7cc39186cb0c8228fa08df76fb50c7d8f24
   SwiftLint: 3207c1faa2240bf8973b191820a116113cd11073
   SwiftMessages: da7c981256a65b3e58022d9027a36584cf4eccf5
@@ -159,6 +156,6 @@ SPEC CHECKSUMS:
   Turf: 9763a5a2d7da05dfdd5ed56aeb0414b291b0fee1
   TwicketSegmentedControl: 6d7a4cf243657e0ac3f00d06d873a25334c04042
 
-PODFILE CHECKSUM: a635d3416a8922d526147fe693040e32146fb133
+PODFILE CHECKSUM: 858b03a266c9ee6ff24526ba1fa5b3e77b472858
 
 COCOAPODS: 1.4.0

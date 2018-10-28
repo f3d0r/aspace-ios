@@ -11,6 +11,7 @@ import CardParts
 
 class DirectionsViewController: CardsViewController {
     
+    var responses: [DriveBikeResponse]?
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -20,5 +21,9 @@ class DirectionsViewController: CardsViewController {
             directionsPages
         ]
         loadCards(cards: cards)
+    }
+    
+    func updateRouteTypeView(index: Int) {
+        
     }
 }

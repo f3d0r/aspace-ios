@@ -187,7 +187,7 @@
                                             <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
                                                 <color key="value" red="0.24313725489999999" green="0.7725490196" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="leftIconString" value="question-circle"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="leftIconString" value="question"/>
                                             <userDefinedRuntimeAttribute type="color" keyPath="leftIconColor">
                                                 <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </userDefinedRuntimeAttribute>
@@ -240,7 +240,7 @@
                     </view>
                     <connections>
                         <outlet property="directionsController" destination="OuZ-kI-V3u" id="cec-dI-cCa"/>
-                        <outlet property="helpButton" destination="lK3-pu-08l" id="tnm-gj-ee1"/>
+                        <outlet property="helpButton" destination="lK3-pu-08l" id="C1d-0j-dZq"/>
                         <outlet property="mapView" destination="Ek8-av-2lS" id="XhL-GH-kgB"/>
                         <outlet property="searchDisplayController" destination="BM8-FT-ASl" id="u9k-Xa-wMs"/>
                         <outlet property="whereToButton" destination="4Th-Dw-djJ" id="1Nf-Mf-V7c"/>

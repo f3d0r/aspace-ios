@@ -28,7 +28,7 @@ import Async
 import Intercom
 import SwiftMessages
 
-class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDelegate, MGLMapViewDelegate, TwicketSegmentedControlDelegate  {
+class MapController: UIViewController, CLLocationManagerDelegate, MGLMapViewDelegate, TwicketSegmentedControlDelegate  {
     
     var locationManager: CLLocationManager!
     
@@ -38,6 +38,8 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
     @IBOutlet weak var whereToButton: LGButton!
     @IBOutlet weak var directionsController: UIView!
     @IBOutlet weak var helpButton: LGButton!
+    var segmentedControl: TwicketSegmentedControl!
+    var directionsViewController: DirectionsViewController!
     
     var currLocationButton: UIButton!
     
@@ -57,21 +59,21 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //MARK: MAP VIEW INITIALIZATION
+        //MARK: MAP VIEW INIT
         mapView.delegate = self
         mapView.isRotateEnabled = false;
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.setCenter(CLLocationCoordinate2D(latitude: 59.31, longitude: 18.06), zoomLevel: 9, animated: false)
         
-        
-        
+        //MARK: WHERE TO BUTTON INIT
         var whereToButtonPressedGesture = UITapGestureRecognizer()
-        whereToButtonPressedGesture = UITapGestureRecognizer(target: self, action: #selector(MapController.myviewTapped(_:)))
+        whereToButtonPressedGesture = UITapGestureRecognizer(target: self, action: #selector(MapController.whereToPressed(_:)))
         whereToButtonPressedGesture.numberOfTapsRequired = 1
         whereToButtonPressedGesture.numberOfTouchesRequired = 1
         whereToButton.addGestureRecognizer(whereToButtonPressedGesture)
         whereToButton.isUserInteractionEnabled = true
         
+        //MARK: HELP BUTTON INIT
         var helpPressedGesture = UITapGestureRecognizer()
         helpPressedGesture = UITapGestureRecognizer(target: self, action: #selector(MapController.helpPressed(_:)))
         helpPressedGesture.numberOfTapsRequired = 1
@@ -79,17 +81,16 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
         helpButton.addGestureRecognizer(helpPressedGesture)
         helpButton.isUserInteractionEnabled = true
         
-        
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         
-        let titles = ["Park & Bike", "Park & Walk", "Closest Parking"]
+        let titles = ["Park & Bike", "Park & Walk", "Just Park"]
         let frame = CGRect(x: 0, y: mapView.frame.height-120, width: view.frame.width, height: 40)
-        let segmentedControl = TwicketSegmentedControl(frame: frame)
+        segmentedControl = TwicketSegmentedControl(frame: frame)
         segmentedControl.setSegmentItems(titles)
         segmentedControl.delegate = self
-        segmentedControl.isHidden = false
+        segmentedControl.isHidden = true
         segmentedControl.sliderBackgroundColor = UIColor(red:0.24, green:0.77, blue:1.00, alpha:1.0)
         
         mapView.addSubview(segmentedControl)
@@ -116,11 +117,12 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
         //        currLocationButton.contentHorizontalAlignment = .fill
         //        currLocationButton.imageEdgeInsets = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 1.0, right: 1.0)
         
-        let directionsViewController = self.storyboard?.instantiateViewController(withIdentifier: "DirectionsViewController") as! DirectionsViewController
+        directionsViewController = (self.storyboard?.instantiateViewController(withIdentifier: "DirectionsViewController") as! DirectionsViewController)
         directionsViewController.view.frame = directionsController.bounds
         directionsController.addSubview(directionsViewController.view)
         addChild(directionsViewController)
         directionsViewController.didMove(toParent: self)
+        directionsController.isHidden = true
     }
     
     
@@ -147,95 +149,6 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
                 moveMapToLatLng(latitude: currentLat, longitude: currentLng)
             }
         }
-        
-    }
-    
-    //    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-    //        if (searchText.count > 0) {
-    //            let options = ForwardGeocodeOptions(query: searchText)
-    //            options.focalLocation = CLLocation(latitude: currentLat, longitude: currentLng)
-    //            _ = geocoder.geocode(options) { (placemarks, attribution, error) in
-    //                var resultsArray = [String]()
-    //                let placeMarks = placemarks
-    //                for currentPM in placeMarks! {
-    //                    resultsArray.append(currentPM.qualifiedName ?? "")
-    //                }
-    //                self.dropDown.dataSource = resultsArray
-    //                self.dropDown.show()
-    //            }
-    //        } else {
-    //            self.dropDown.hide()
-    //        }
-    //    }
-    
-    func zoomToSearchText(searchItem: String) {
-        if (searchItem.count > 0) {
-            let options = ForwardGeocodeOptions(query: searchItem)
-            options.focalLocation = CLLocation(latitude: currentLat, longitude: currentLng)
-            _ = geocoder.geocode(options) { (placemarks, attribution, error) in
-                guard let placemark = placemarks?.first else {
-                    return
-                }
-                let coordinate = placemark.location?.coordinate
-                let center = CLLocationCoordinate2D(latitude: coordinate!.latitude, longitude: coordinate!.longitude)
-                
-                let camera = MGLMapCamera(lookingAtCenter: center, fromDistance: 1500, pitch: 0, heading: 0)
-                
-                let marker = MGLPointAnnotation()
-                marker.coordinate = CLLocationCoordinate2D(latitude: coordinate!.latitude, longitude: coordinate!.longitude)
-                marker.title = "Your Destination"
-                marker.subtitle = placemark.qualifiedName
-                
-                self.mapView.addAnnotation(marker)
-                
-                
-                let _ = CLLocationCoordinate2DMake(self.currentLat, self.currentLng) //origin
-                let _ = CLLocationCoordinate2DMake(coordinate!.latitude, coordinate!.longitude) //destination
-                
-                var url = "https://routing.trya.space/v1/get_drive_bike_route?origin_lat=" + String(self.currentLat) + "&origin_lng=" + String(self.currentLng);
-                url += "&dest_lat=" + String(coordinate!.latitude) + "&dest_lng=" + String(coordinate!.longitude);
-                url += "&session_starting=0&access_code=4b9b2841ba12c2b1df147234fa668121&device_id=a0944f8c-1e66-45eb-997f-3b460936708e";
-                print(url);
-                Alamofire.request(url, method: .post)
-                    .responseJSON { response in
-                        if response.data != nil {
-                            let json = JSON(response.data!)
-                            let driveSegment = json["res_content"]["routes"][0][0]["directions"]["routes"][0]["geometry"].rawString();
-                            let walkSegment = json["res_content"]["routes"][0][1]["directions"]["routes"][0]["geometry"].rawString();
-                            let bikeSegment = json["res_content"]["routes"][0][2]["directions"]["routes"][0]["geometry"].rawString();
-                            if let newData = driveSegment!.data(using: String.Encoding.utf8) {
-                                print(newData)
-                                self.drawPolyline(geoJson: newData, lineColor: UIColor.blue, layerName: "driveSegment")
-                            }
-                            if let newData = walkSegment!.data(using: String.Encoding.utf8) {
-                                print(newData)
-                                self.drawPolyline(geoJson: newData, lineColor: UIColor.lightGray, layerName: "walkSegment")
-                            }
-                            if let newData = bikeSegment!.data(using: String.Encoding.utf8) {
-                                print(newData)
-                                self.drawPolyline(geoJson: newData, lineColor: UIColor.green, layerName: "bikeSegment")
-                            }
-                            //                                if let jsonObject = try? JSON(data: data) {
-                            //                                    print("HERE---------------------")
-                            //                                    print(jsonObject)
-                            //
-                            
-                            //                                                        }
-                        }
-                }
-                
-                //                self.calculateRoute(from: origin, to: destination) { (route, error) in
-                //                    if error != nil {
-                //                        print("Error calculating route")
-                //                    }
-                //                }
-                self.mapView.setCamera(camera, withDuration: 2, animationTimingFunction: CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut))
-            }
-        }
-    }
-    
-    func drawRouteOnMap(driveSegment: Data, walkSegment: Data) {
-        
     }
     
     // Use the default marker. See also: our view annotation or custom marker examples.
@@ -253,7 +166,6 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
     }
     
     private func mapView(mapView: MGLMapView, regionDidChangeAnimated animated: Bool) -> Bool {
-        print("mapmoved")
         return true
     }
     
@@ -325,40 +237,79 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
             } else if (driveBikeResponse.resInfo?.code != 31 || driveWalkResponse.resInfo?.code != 31 || driveDirectResponse.resInfo?.code != 31) {
                 self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
             } else {
-                print("OK!")
+                self.drawRoute(response: driveBikeResponse)
+                self.directionsController.fadeIn()
+                self.segmentedControl.move(to: 0)
+                self.segmentedControl.fadeIn()
+                self.viewingRoute = true
             }
         }
     }
     
-    func drawPolyline(geoJson: Data, lineColor: UIColor, layerName: String) {
-        // Add our GeoJSON data to the map as an MGLGeoJSONSource.
-        // We can then reference this data from an MGLStyleLayer.
+    func clearMap() {
+        mapView.style?.layers.forEach { currLayer in
+            print(currLayer.identifier)
+            let id = currLayer.identifier.substring(to: 5)
+            if (id == "route") {
+                mapView.style?.removeLayer(currLayer)
+            }
+        }
+        mapView.style?.sources.forEach { currSource in
+            print(currSource.identifier)
+            if (currSource.identifier == "route") {
+                mapView.style?.removeSource(currSource)
+            }
+        }
+    }
+    
+    func drawRoute(response: DriveBikeResponse) {
+        if let coordinates = response.resContent?.routes?[0][0].directions?.routes?[0].geometry?.coordinates {
+            var mapCoordinates: [CLLocationCoordinate2D] = []
+            
+            coordinates.forEach { coordinate in
+                let currCoord = CLLocationCoordinate2D(latitude: coordinate[1], longitude: coordinate[0])
+                mapCoordinates.append(currCoord)
+            }
+            let polyline = MGLPolyline(coordinates: mapCoordinates, count: UInt(mapCoordinates.count))
+            
+            let source = MGLShapeSource(identifier: "route", shape: polyline, options: nil)
+            mapView.style?.addSource(source)
+            
+            let layer = MGLLineStyleLayer(identifier: "route-polyline", source: source)
+            
+            layer.lineJoin = NSExpression(forConstantValue: "round")
+            layer.lineCap = NSExpression(forConstantValue: "round")
+            
+            layer.lineColor = NSExpression(forConstantValue: UIColor(red: 59/255, green: 178/255, blue: 208/255, alpha: 1))
+            
+            layer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
+                                           [14: 2, 18: 20])
+            
+            let casingLayer = MGLLineStyleLayer(identifier: "route-polyline-case", source: source)
+            casingLayer.lineJoin = layer.lineJoin
+            casingLayer.lineCap = layer.lineCap
+            // Line gap width represents the space before the outline begins, so should match the main line’s line width exactly.
+            casingLayer.lineGapWidth = layer.lineWidth
+            // Stroke color slightly darker than the line color.
+            casingLayer.lineColor = NSExpression(forConstantValue: UIColor(red: 41/255, green: 145/255, blue: 171/255, alpha: 1))
+            // Use `NSExpression` to gradually increase the stroke width between zoom levels 14 and 18.
+            casingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [14: 1, 18: 4])
+            
+            // Just for fun, let’s add another copy of the line with a dash pattern.
+            let dashedLayer = MGLLineStyleLayer(identifier: "route-polyline-dash", source: source)
+            dashedLayer.lineJoin = layer.lineJoin
+            dashedLayer.lineCap = layer.lineCap
+            dashedLayer.lineColor = NSExpression(forConstantValue: UIColor.white)
+            dashedLayer.lineOpacity = NSExpression(forConstantValue: 0.5)
+            dashedLayer.lineWidth = layer.lineWidth
+            // Dash pattern in the format [dash, gap, dash, gap, ...]. You’ll want to adjust these values based on the line cap style.
+            dashedLayer.lineDashPattern = NSExpression(forConstantValue: [0, 1.5])
+            
+            mapView.style?.addLayer(layer)
+            mapView.style?.addLayer(dashedLayer)
+            mapView.style?.insertLayer(casingLayer, below: layer)
+        }
         
-        // MGLMapView.style is optional, so you must guard against it not being set.
-        guard let style = self.mapView.style else { return }
-        
-        let shapeFromGeoJSON = try! MGLShape(data: geoJson, encoding: String.Encoding.utf8.rawValue)
-        let source = MGLShapeSource(identifier: layerName, shape: shapeFromGeoJSON, options: nil)
-        style.addSource(source)
-        
-        // Create new layer for the line.
-        let layer = MGLLineStyleLayer(identifier: layerName, source: source)
-        
-        // Set the line join and cap to a rounded end.
-        layer.lineJoin = NSExpression(forConstantValue: "round")
-        layer.lineCap = NSExpression(forConstantValue: "round")
-        
-        // Set the line color to a constant blue color.
-        layer.lineColor = NSExpression(forConstantValue: lineColor)
-        
-        // Use `NSExpression` to smoothly adjust the line width from 2pt to 20pt between zoom levels 14 and 18. The `interpolationBase` parameter allows the values to interpolate along an exponential curve.
-        layer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-                                       [14: 2, 18: 20])
-        
-        style.addLayer(layer)
-        
-        //        style.addLayer(dashedLayer)
-        //        style.insertLayer(casingLayer, below: layer)
     }
     
     func getRoutingURL(routeType: String, originLat: Double, originLng: Double, destLat: Double, destLng: Double, sessionStarting: String, accessCode: String, deviceId: String) -> String {
@@ -387,10 +338,13 @@ class MapController: UIViewController, CLLocationManagerDelegate, UISearchBarDel
     }
     
     func didSelect(_ segmentIndex: Int) {
-        print("options selected\(segmentIndex)")
+        if (viewingRoute) {
+            clearMap()
+            self.directionsViewController.updateRouteTypeView(index: segmentIndex)
+        }
     }
     
-    @objc func myviewTapped(_ sender: UITapGestureRecognizer) {
+    @objc func whereToPressed(_ sender: UITapGestureRecognizer) {
         let autocompleteController = GMSAutocompleteViewController()
         autocompleteController.delegate = self
         present(autocompleteController, animated: true, completion: nil)
@@ -411,8 +365,6 @@ extension MapController: GMSAutocompleteViewControllerDelegate {
     }
     
     func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
-        // TODO: handle the error.
-        
     }
     
     // User canceled the operation.
@@ -423,10 +375,14 @@ extension MapController: GMSAutocompleteViewControllerDelegate {
     
     // Turn the network activity indicator on and off again.
     func didRequestAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
+        directionsController.isHidden = true
+        segmentedControl.isHidden = true
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
     }
     
     func didUpdateAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
+        directionsController.isHidden = true
+        segmentedControl.isHidden = true
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
     
@@ -435,5 +391,36 @@ extension MapController: GMSAutocompleteViewControllerDelegate {
 extension Double {
     func toString() -> String {
         return String(format: "%.10f",self)
+    }
+}
+
+extension UIView {
+    
+    func fadeIn(duration: TimeInterval = 0.5, delay: TimeInterval = 0.0, completion: @escaping ((Bool) -> Void) = {(finished: Bool) -> Void in }) {
+        self.alpha = 0.0
+        
+        UIView.animate(withDuration: duration, delay: delay, options: UIView.AnimationOptions.curveEaseIn, animations: {
+            self.isHidden = false
+            self.alpha = 1.0
+        }, completion: completion)
+    }
+    
+    func fadeOut(duration: TimeInterval = 0.5, delay: TimeInterval = 0.0, completion: @escaping (Bool) -> Void = {(finished: Bool) -> Void in }) {
+        self.alpha = 1.0
+        
+        UIView.animate(withDuration: duration, delay: delay, options: UIView.AnimationOptions.curveEaseIn, animations: {
+            self.alpha = 0.0
+        }) { (completed) in
+            self.isHidden = true
+            completion(true)
+        }
+    }
+}
+
+extension String {
+    func substring(to: Int) -> String? {
+        guard to < self.characters.count else { return nil }
+        let toIndex = index(self.startIndex, offsetBy: to)
+        return substring(to: toIndex)
     }
 }
