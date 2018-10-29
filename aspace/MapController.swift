@@ -27,32 +27,34 @@ import LGButton
 import Async
 import Intercom
 import SwiftMessages
+import EPContactsPicker
 
-class MapController: UIViewController, CLLocationManagerDelegate, MGLMapViewDelegate, TwicketSegmentedControlDelegate  {
+class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate, TwicketSegmentedControlDelegate, EPPickerDelegate  {
     
-    var locationManager: CLLocationManager!
-    
-    let cellPercentWidth: CGFloat = 0.7
-    
+    //MARK: UI VIEWS
     @IBOutlet weak var mapView: MGLMapView!
     @IBOutlet weak var whereToButton: LGButton!
     @IBOutlet weak var directionsController: UIView!
     @IBOutlet weak var helpButton: LGButton!
+    @IBOutlet weak var currLocButton: LGButton!
+    @IBOutlet weak var referButton: LGButton!
     var segmentedControl: TwicketSegmentedControl!
     var directionsViewController: DirectionsViewController!
     
-    var currLocationButton: UIButton!
+    //MARK: UI VIEW UTILS
+    var locationManager: CLLocationManager!
+    let cellPercentWidth: CGFloat = 0.7
     
     var initMapLocation = false
     
+    //MARK: CURRENT LOCATION STATE
     var currentLat : Double!
     var currentLng : Double!
-    
-    var currLocationEnabled = false
+    var currLocationEnabled = true
     
     let geocoder = Geocoder(accessToken: "pk.eyJ1IjoiZmVkb3ItYXNwYWNlIiwiYSI6ImNqbXJ6Zzc4NjFxdzYzcHFjYmNrb2Q2MGUifQ.mltUs2Zs9ufl4IOhHbD8BA")
     
-    var directionsRoute: Route?
+    var currentDirections: [DriveBikeResponse]!
     
     var viewingRoute = false
     
@@ -60,10 +62,11 @@ class MapController: UIViewController, CLLocationManagerDelegate, MGLMapViewDele
         super.viewDidLoad()
         
         //MARK: MAP VIEW INIT
-        mapView.delegate = self
         mapView.isRotateEnabled = false;
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.setCenter(CLLocationCoordinate2D(latitude: 59.31, longitude: 18.06), zoomLevel: 9, animated: false)
+        mapView.showsUserLocation = true
+        mapView.delegate = self
         
         //MARK: WHERE TO BUTTON INIT
         var whereToButtonPressedGesture = UITapGestureRecognizer()
@@ -80,6 +83,23 @@ class MapController: UIViewController, CLLocationManagerDelegate, MGLMapViewDele
         helpPressedGesture.numberOfTouchesRequired = 1
         helpButton.addGestureRecognizer(helpPressedGesture)
         helpButton.isUserInteractionEnabled = true
+        
+        //MARK: CURRENT LOC BUTTON INIT
+        var currLocButtonPressedGesture = UITapGestureRecognizer()
+        currLocButtonPressedGesture = UITapGestureRecognizer(target: self, action: #selector(MapController.currLocPressed(_:)))
+        currLocButtonPressedGesture.numberOfTapsRequired = 1
+        currLocButtonPressedGesture.numberOfTouchesRequired = 1
+        currLocButton.addGestureRecognizer(currLocButtonPressedGesture)
+        currLocButton.isUserInteractionEnabled = true
+        
+        //MARK: REFER BUTTON INIT
+        var referButtonPressedGesture = UITapGestureRecognizer()
+        referButtonPressedGesture = UITapGestureRecognizer(target: self, action: #selector(MapController.referPressed(_:)))
+        referButtonPressedGesture.numberOfTapsRequired = 1
+        referButtonPressedGesture.numberOfTouchesRequired = 1
+        referButton.addGestureRecognizer(referButtonPressedGesture)
+        referButton.isUserInteractionEnabled = true
+        
         
         locationManager = CLLocationManager()
         locationManager.delegate = self
@@ -125,7 +145,6 @@ class MapController: UIViewController, CLLocationManagerDelegate, MGLMapViewDele
         directionsController.isHidden = true
     }
     
-    
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status != .authorizedWhenInUse {return}
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -169,18 +188,6 @@ class MapController: UIViewController, CLLocationManagerDelegate, MGLMapViewDele
         return true
     }
     
-    @objc func currLocationButtonPressed() {
-        currLocationEnabled = !currLocationEnabled;
-        if (currLocationEnabled) {
-            currLocationButton.setImage(UIImage(named: "curr_loc_enabled"), for: UIControl.State.normal)
-            mapView.showsUserLocation = true
-            mapView.setUserTrackingMode(.follow, animated: true)
-        } else {
-            mapView.showsUserLocation = false
-            mapView.setUserTrackingMode(.none, animated: false)
-            currLocationButton.setImage(UIImage(named: "curr_loc_disabled"), for: UIControl.State.normal)
-        }
-    }
     
     func moveMapToLatLng(latitude: Double, longitude: Double, fromDistance: Double = 1250) {
         let center = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
@@ -237,79 +244,78 @@ class MapController: UIViewController, CLLocationManagerDelegate, MGLMapViewDele
             } else if (driveBikeResponse.resInfo?.code != 31 || driveWalkResponse.resInfo?.code != 31 || driveDirectResponse.resInfo?.code != 31) {
                 self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
             } else {
-                self.drawRoute(response: driveBikeResponse)
-                self.directionsController.fadeIn()
-                self.segmentedControl.move(to: 0)
-                self.segmentedControl.fadeIn()
-                self.viewingRoute = true
+                driveBikeResponse.resContent?.routes?[0].forEach { routeSegment in
+                    guard let coordinates = routeSegment.directions?.routes?[0].geometry?.coordinates else {
+                        self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
+                        return
+                    }
+                    guard let id = routeSegment.name else {
+                        self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
+                        return
+                    }
+                    var color = UIColor.lightGray
+                    if (id == "drive_park") {
+                        color = UIColor(red: 59/255, green: 178/255, blue: 208/255, alpha: 1)
+                    } else if (id == "walk_bike") {
+                        color = UIColor.lightGray
+                    } else if (id == "bike_dest") {
+                        color = UIColor.green
+                    }
+                    self.drawRoute(coordinates: coordinates, lineColor: color, lineID: id)
+                }
             }
+            self.directionsController.fadeIn()
+            self.segmentedControl.move(to: 0)
+            self.segmentedControl.fadeIn()
+            self.viewingRoute = true
         }
     }
     
     func clearMap() {
         mapView.style?.layers.forEach { currLayer in
-            print(currLayer.identifier)
-            let id = currLayer.identifier.substring(to: 5)
-            if (id == "route") {
+            let layerID = currLayer.identifier.substring(to: 5)
+            if (layerID == "route") {
                 mapView.style?.removeLayer(currLayer)
             }
         }
         mapView.style?.sources.forEach { currSource in
-            print(currSource.identifier)
-            if (currSource.identifier == "route") {
+            let sourceID = currSource.identifier.substring(to: 5)
+            if (sourceID == "route") {
                 mapView.style?.removeSource(currSource)
             }
         }
     }
     
-    func drawRoute(response: DriveBikeResponse) {
-        if let coordinates = response.resContent?.routes?[0][0].directions?.routes?[0].geometry?.coordinates {
-            var mapCoordinates: [CLLocationCoordinate2D] = []
-            
-            coordinates.forEach { coordinate in
-                let currCoord = CLLocationCoordinate2D(latitude: coordinate[1], longitude: coordinate[0])
-                mapCoordinates.append(currCoord)
-            }
-            let polyline = MGLPolyline(coordinates: mapCoordinates, count: UInt(mapCoordinates.count))
-            
-            let source = MGLShapeSource(identifier: "route", shape: polyline, options: nil)
-            mapView.style?.addSource(source)
-            
-            let layer = MGLLineStyleLayer(identifier: "route-polyline", source: source)
-            
-            layer.lineJoin = NSExpression(forConstantValue: "round")
-            layer.lineCap = NSExpression(forConstantValue: "round")
-            
-            layer.lineColor = NSExpression(forConstantValue: UIColor(red: 59/255, green: 178/255, blue: 208/255, alpha: 1))
-            
-            layer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-                                           [14: 2, 18: 20])
-            
-            let casingLayer = MGLLineStyleLayer(identifier: "route-polyline-case", source: source)
-            casingLayer.lineJoin = layer.lineJoin
-            casingLayer.lineCap = layer.lineCap
-            // Line gap width represents the space before the outline begins, so should match the main line’s line width exactly.
-            casingLayer.lineGapWidth = layer.lineWidth
-            // Stroke color slightly darker than the line color.
-            casingLayer.lineColor = NSExpression(forConstantValue: UIColor(red: 41/255, green: 145/255, blue: 171/255, alpha: 1))
-            // Use `NSExpression` to gradually increase the stroke width between zoom levels 14 and 18.
-            casingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [14: 1, 18: 4])
-            
-            // Just for fun, let’s add another copy of the line with a dash pattern.
-            let dashedLayer = MGLLineStyleLayer(identifier: "route-polyline-dash", source: source)
-            dashedLayer.lineJoin = layer.lineJoin
-            dashedLayer.lineCap = layer.lineCap
-            dashedLayer.lineColor = NSExpression(forConstantValue: UIColor.white)
-            dashedLayer.lineOpacity = NSExpression(forConstantValue: 0.5)
-            dashedLayer.lineWidth = layer.lineWidth
-            // Dash pattern in the format [dash, gap, dash, gap, ...]. You’ll want to adjust these values based on the line cap style.
-            dashedLayer.lineDashPattern = NSExpression(forConstantValue: [0, 1.5])
-            
-            mapView.style?.addLayer(layer)
-            mapView.style?.addLayer(dashedLayer)
-            mapView.style?.insertLayer(casingLayer, below: layer)
+    func drawRoute(coordinates: [[Double]], lineColor: UIColor, lineID: String) {
+        var mapCoordinates: [CLLocationCoordinate2D] = []
+        coordinates.forEach { coordinate in
+            let currCoord = CLLocationCoordinate2D(latitude: coordinate[1], longitude: coordinate[0])
+            mapCoordinates.append(currCoord)
         }
+        let polyline = MGLPolyline(coordinates: mapCoordinates, count: UInt(mapCoordinates.count))
         
+        let source = MGLShapeSource(identifier: "route-" + lineID, shape: polyline, options: nil)
+        mapView.style?.addSource(source)
+        
+        let layer = MGLLineStyleLayer(identifier: "route-polyline-" + lineID, source: source)
+        
+        layer.lineJoin = NSExpression(forConstantValue: "round")
+        layer.lineCap = NSExpression(forConstantValue: "round")
+        
+        layer.lineColor = NSExpression(forConstantValue: lineColor)
+        
+        layer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
+                                       [14: 2, 18: 20])
+        
+        let casingLayer = MGLLineStyleLayer(identifier: "route-polyline-case-" + lineID, source: source)
+        casingLayer.lineJoin = layer.lineJoin
+        casingLayer.lineCap = layer.lineCap
+        casingLayer.lineGapWidth = layer.lineWidth
+        casingLayer.lineColor = NSExpression(forConstantValue: lineColor)
+        casingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [14: 1, 18: 4])
+        
+        mapView.style?.addLayer(layer)
+        mapView.style?.insertLayer(casingLayer, below: layer)
     }
     
     func getRoutingURL(routeType: String, originLat: Double, originLng: Double, destLat: Double, destLng: Double, sessionStarting: String, accessCode: String, deviceId: String) -> String {
@@ -351,8 +357,43 @@ class MapController: UIViewController, CLLocationManagerDelegate, MGLMapViewDele
         whereToButton.isLoading = true
     }
     
+    @objc func referPressed(_ sender: UITapGestureRecognizer) {
+        let contactPickerScene = EPContactsPicker(delegate: self, multiSelection:true, subtitleCellType: SubtitleCellValue.phoneNumber)
+        let navigationController = UINavigationController(rootViewController: contactPickerScene)
+        self.present(navigationController, animated: true, completion: nil)
+    }
+    
+    func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts : [EPContact]) {
+        contacts.forEach { contact in
+            print(contact.firstName)
+        }
+    }
+    
     @objc func helpPressed(_ sender: UITapGestureRecognizer) {
         Intercom.presentMessenger()
+    }
+    
+    @objc func currLocPressed(_ sender: UITapGestureRecognizer) {
+        currLocToggle()
+    }
+    
+    func currLocToggle() {
+        currLocationEnabled = !currLocationEnabled;
+        if (currLocationEnabled) {
+            currLocButton.leftIconColor = UIColor(red:0.24, green:0.77, blue:1.00, alpha:1.0)
+            currLocButton.borderColor = UIColor(red:0.24, green:0.77, blue:1.00, alpha:1.0)
+            mapView.showsUserLocation = true
+            mapView.setUserTrackingMode(.follow, animated: true)
+            print("LATITUDE \(mapView.userLocation?.coordinate.latitude)");
+            print("LONGITUDE \(mapView.userLocation?.coordinate.longitude)");
+        } else {
+            print("LATITUDE \(mapView.userLocation?.coordinate.latitude)");
+            print("LONGITUDE \(mapView.userLocation?.coordinate.longitude)");
+            mapView.showsUserLocation = false
+            mapView.setUserTrackingMode(.none, animated: false)
+            currLocButton.leftIconColor = UIColor.lightGray;
+            currLocButton.borderColor = UIColor.lightGray;
+        }
     }
 }
 
@@ -361,6 +402,7 @@ extension MapController: GMSAutocompleteViewControllerDelegate {
     // Handle the user's selection.
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         dismiss(animated: true, completion: nil)
+        clearMap()
         getRoute(fromLat: currentLat, fromLng: currentLng, toLat: place.coordinate.latitude, toLng: place.coordinate.longitude, routeType: "get_drive_bike_route");
     }
     

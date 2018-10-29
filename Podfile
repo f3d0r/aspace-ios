@@ -31,6 +31,7 @@ target 'aspace' do
     pod 'PromiseKit/CorePromise'
     pod 'PromiseKit/Alamofire'
     pod 'AsyncSwift'
+    pod 'EPContactsPicker'
 
     target 'aspaceTests' do
         inherit! :search_paths

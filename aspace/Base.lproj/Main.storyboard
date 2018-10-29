@@ -207,6 +207,44 @@
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="fullyRoundedCorners" value="YES"/>
                                         </userDefinedRuntimeAttributes>
                                     </view>
+                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="j0d-ad-tfV" userLabel="Current Location Button" customClass="LGButton" customModule="LGButton">
+                                        <rect key="frame" x="127" y="337" width="60" height="60"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="j0d-ad-tfV" secondAttribute="height" id="34L-E3-BIN"/>
+                                            <constraint firstAttribute="height" constant="60" id="7KS-wJ-ihG"/>
+                                            <constraint firstAttribute="width" constant="60" id="YOw-Yb-Ada"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
+                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="leftIconString" value="compass"/>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="leftIconColor">
+                                                <color key="value" red="0.24313725489999999" green="0.7725490196" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="leftIconFontName" value="fa"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="titleFontSize">
+                                                <real key="value" value="20"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="leftIconFontSize">
+                                                <real key="value" value="32"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="leftImageWidth">
+                                                <real key="value" value="20"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="leftImageHeight">
+                                                <real key="value" value="20"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="fullyRoundedCorners" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                <color key="value" red="0.24313725489999999" green="0.7725490196" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="2"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
                                     <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OuZ-kI-V3u" userLabel="Directions Container">
                                         <rect key="frame" x="62" y="47" width="250" height="250"/>
                                     </containerView>
@@ -214,8 +252,10 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="lK3-pu-08l" firstAttribute="centerY" secondItem="4Th-Dw-djJ" secondAttribute="centerY" id="4Dh-Ek-TPc"/>
+                                    <constraint firstItem="j0d-ad-tfV" firstAttribute="leading" secondItem="Ek8-av-2lS" secondAttribute="leading" constant="25" id="K3R-Pn-XEB"/>
                                     <constraint firstItem="lK3-pu-08l" firstAttribute="leading" secondItem="Ek8-av-2lS" secondAttribute="leading" constant="25" id="f3V-7Y-9Hb"/>
                                     <constraint firstItem="gSJ-y2-MJ8" firstAttribute="trailing" secondItem="Ek8-av-2lS" secondAttribute="trailing" constant="-25" id="rGN-PE-bfB"/>
+                                    <constraint firstItem="j0d-ad-tfV" firstAttribute="bottom" secondItem="Ek8-av-2lS" secondAttribute="bottom" constant="-25" id="wRg-3j-PcV"/>
                                     <constraint firstItem="gSJ-y2-MJ8" firstAttribute="centerY" secondItem="4Th-Dw-djJ" secondAttribute="centerY" id="zql-dF-4Oq"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -239,9 +279,11 @@
                         <viewLayoutGuide key="safeArea" id="rKb-AG-Sad"/>
                     </view>
                     <connections>
+                        <outlet property="currLocButton" destination="j0d-ad-tfV" id="SfY-6Q-8IZ"/>
                         <outlet property="directionsController" destination="OuZ-kI-V3u" id="cec-dI-cCa"/>
                         <outlet property="helpButton" destination="lK3-pu-08l" id="C1d-0j-dZq"/>
                         <outlet property="mapView" destination="Ek8-av-2lS" id="XhL-GH-kgB"/>
+                        <outlet property="referButton" destination="gSJ-y2-MJ8" id="iVY-r7-DR1"/>
                         <outlet property="searchDisplayController" destination="BM8-FT-ASl" id="u9k-Xa-wMs"/>
                         <outlet property="whereToButton" destination="4Th-Dw-djJ" id="1Nf-Mf-V7c"/>
                     </connections>

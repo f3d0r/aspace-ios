@@ -31,6 +31,8 @@
 	<string>YES</string>
 	<key>MGLMapboxMetricsEnabledSettingShownInApp</key>
 	<string>YES</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Access your contacts to refer users to aspace.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Shows your location on the map for faster experience.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
