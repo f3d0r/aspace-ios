@@ -18,7 +18,7 @@
 		A3694B432163295B003354DD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A3694B422163295B003354DD /* Settings.bundle */; };
 		A3694B48216333D1003354DD /* LoginPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3694B47216333D1003354DD /* LoginPhoneViewController.swift */; };
 		A3694B4A2163589D003354DD /* LoginPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3694B492163589D003354DD /* LoginPinViewController.swift */; };
-		A3903F1A218265D60027068E /* DriveBikeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3903F19218265D60027068E /* DriveBikeResponse.swift */; };
+		A3903F1A218265D60027068E /* RoutingResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3903F19218265D60027068E /* RoutingResponse.swift */; };
 		A3903F1E2183B0D50027068E /* CardPartPagedViewCardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3903F1D2183B0D50027068E /* CardPartPagedViewCardController.swift */; };
 		A3C1FDA8216C095C00F312FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A3C1FDA7216C095C00F312FB /* Assets.xcassets */; };
 		A3C9D9F72183C9DD00106143 /* DirectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C9D9F62183C9DD00106143 /* DirectionsViewController.swift */; };
@@ -64,7 +64,7 @@
 		A3694B422163295B003354DD /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		A3694B47216333D1003354DD /* LoginPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPhoneViewController.swift; sourceTree = "<group>"; };
 		A3694B492163589D003354DD /* LoginPinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPinViewController.swift; sourceTree = "<group>"; };
-		A3903F19218265D60027068E /* DriveBikeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveBikeResponse.swift; sourceTree = "<group>"; };
+		A3903F19218265D60027068E /* RoutingResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingResponse.swift; sourceTree = "<group>"; };
 		A3903F1D2183B0D50027068E /* CardPartPagedViewCardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardPartPagedViewCardController.swift; sourceTree = "<group>"; };
 		A3C1FDA7216C095C00F312FB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A3C9D9F62183C9DD00106143 /* DirectionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsViewController.swift; sourceTree = "<group>"; };
@@ -127,7 +127,7 @@
 		A3410457218188C90087D6B2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				A3903F19218265D60027068E /* DriveBikeResponse.swift */,
+				A3903F19218265D60027068E /* RoutingResponse.swift */,
 			);
 			name = Models;
 			path = ..;
@@ -580,7 +580,7 @@
 				A3694B4A2163589D003354DD /* LoginPinViewController.swift in Sources */,
 				A3694B48216333D1003354DD /* LoginPhoneViewController.swift in Sources */,
 				A3C9D9F72183C9DD00106143 /* DirectionsViewController.swift in Sources */,
-				A3903F1A218265D60027068E /* DriveBikeResponse.swift in Sources */,
+				A3903F1A218265D60027068E /* RoutingResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -759,7 +759,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RHB5YFR7LS;
 				INFOPLIST_FILE = aspace/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = space.trya;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
@@ -775,7 +778,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RHB5YFR7LS;
 				INFOPLIST_FILE = aspace/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = space.trya;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
@@ -792,7 +798,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z7JYTJ746J;
 				INFOPLIST_FILE = aspaceTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = trya.space.aspaceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
@@ -810,7 +820,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z7JYTJ746J;
 				INFOPLIST_FILE = aspaceTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = trya.space.aspaceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
@@ -827,7 +841,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z7JYTJ746J;
 				INFOPLIST_FILE = aspaceUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = trya.space.aspaceUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
@@ -844,7 +862,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z7JYTJ746J;
 				INFOPLIST_FILE = aspaceUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = trya.space.aspaceUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;

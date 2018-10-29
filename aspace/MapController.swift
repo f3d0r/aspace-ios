@@ -41,10 +41,9 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
     var segmentedControl: TwicketSegmentedControl!
     var directionsViewController: DirectionsViewController!
     
-    //MARK: UI VIEW UTILS
+    //MARK: UI VIEW UTILS/STATE
     var locationManager: CLLocationManager!
     let cellPercentWidth: CGFloat = 0.7
-    
     var initMapLocation = false
     
     //MARK: CURRENT LOCATION STATE
@@ -54,9 +53,10 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
     
     let geocoder = Geocoder(accessToken: "pk.eyJ1IjoiZmVkb3ItYXNwYWNlIiwiYSI6ImNqbXJ6Zzc4NjFxdzYzcHFjYmNrb2Q2MGUifQ.mltUs2Zs9ufl4IOhHbD8BA")
     
-    var currentDirections: [DriveBikeResponse]!
-    
+    //MARK: DIRECTIONS DATA
+    var currentDirections: [RoutingResponse]!
     var viewingRoute = false
+    var viewingRouteIndex: Int!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,6 +105,7 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         
+        //MARK: SEGMENTED CONTROL INIT
         let titles = ["Park & Bike", "Park & Walk", "Just Park"]
         let frame = CGRect(x: 0, y: mapView.frame.height-120, width: view.frame.width, height: 40)
         segmentedControl = TwicketSegmentedControl(frame: frame)
@@ -112,31 +113,9 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
         segmentedControl.delegate = self
         segmentedControl.isHidden = true
         segmentedControl.sliderBackgroundColor = UIColor(red:0.24, green:0.77, blue:1.00, alpha:1.0)
-        
         mapView.addSubview(segmentedControl)
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(hideKeyBoard))
-        
-        self.view.addGestureRecognizer(tap)
-        
-        //        currLocationButton = UIButton(type: .custom)
-        //        currLocationButton.frame = CGRect(x: 50, y: 50, width: 50, height: 50)
-        //        currLocationButton.layer.cornerRadius = 0.5 * currLocationButton.bounds.size.width
-        //        currLocationButton.clipsToBounds = true
-        //        currLocationButton.setImage(UIImage(named:"curr_loc_disabled"), for: .normal)
-        //        currLocationButton.backgroundColor = UIColor.white
-        //        currLocationButton.addTarget(self, action: #selector(currLocationButtonPressed), for: .touchUpInside)
-        //
-        //        mapView.addSubview(currLocationButton)
-        //
-        //        currLocationButton.translatesAutoresizingMaskIntoConstraints = false
-        //        currLocationButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
-        //        currLocationButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -60).isActive = true
-        //
-        //        currLocationButton.contentVerticalAlignment = .fill
-        //        currLocationButton.contentHorizontalAlignment = .fill
-        //        currLocationButton.imageEdgeInsets = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 1.0, right: 1.0)
-        
+        //MARK: DIRECTIONS CONTROLLER INIT
         directionsViewController = (self.storyboard?.instantiateViewController(withIdentifier: "DirectionsViewController") as! DirectionsViewController)
         directionsViewController.view.frame = directionsController.bounds
         directionsController.addSubview(directionsViewController.view)
@@ -205,33 +184,36 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
         let driveDirectUrl = getRoutingURL(routeType: "get_drive_direct_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: "07fa1e185317402c043cff15c13da745", deviceId: "e2fad51a-da1c-40b1-9c7a-e8a12fbb3cb5")
         
         group.enter()
-        var driveBikeResponse: DriveBikeResponse!
-        var driveWalkResponse: DriveBikeResponse!
-        var driveDirectResponse: DriveBikeResponse!
-        Alamofire.request(driveBikeUrl, method: .post).responseDriveBikeResponse { response in
+        var driveBikeResponse: RoutingResponse!
+        var driveWalkResponse: RoutingResponse!
+        var driveDirectResponse: RoutingResponse!
+        Alamofire.request(driveBikeUrl, method: .post).responseRoutingResponse { response in
             if let driveBike = response.result.value {
                 driveBikeResponse = driveBike
                 group.leave()
             } else {
                 self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
+                print(driveBikeUrl)
             }
         }
         group.enter()
-        Alamofire.request(driveWalkUrl, method: .post).responseDriveBikeResponse { response in
+        Alamofire.request(driveWalkUrl, method: .post).responseRoutingResponse { response in
             if let driveWalk = response.result.value {
                 driveWalkResponse = driveWalk
                 group.leave()
             } else {
                 self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
+                print(driveWalkUrl)
             }
         }
         group.enter()
-        Alamofire.request(driveDirectUrl, method: .post).responseDriveBikeResponse { response in
+        Alamofire.request(driveDirectUrl, method: .post).responseRoutingResponse { response in
             if let driveDirect = response.result.value {
                 driveDirectResponse = driveDirect
                 group.leave()
             } else {
                 self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
+                print(driveDirectUrl)
             }
         }
         
@@ -244,30 +226,12 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
             } else if (driveBikeResponse.resInfo?.code != 31 || driveWalkResponse.resInfo?.code != 31 || driveDirectResponse.resInfo?.code != 31) {
                 self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
             } else {
-                driveBikeResponse.resContent?.routes?[0].forEach { routeSegment in
-                    guard let coordinates = routeSegment.directions?.routes?[0].geometry?.coordinates else {
-                        self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
-                        return
-                    }
-                    guard let id = routeSegment.name else {
-                        self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
-                        return
-                    }
-                    var color = UIColor.lightGray
-                    if (id == "drive_park") {
-                        color = UIColor(red: 59/255, green: 178/255, blue: 208/255, alpha: 1)
-                    } else if (id == "walk_bike") {
-                        color = UIColor.lightGray
-                    } else if (id == "bike_dest") {
-                        color = UIColor.green
-                    }
-                    self.drawRoute(coordinates: coordinates, lineColor: color, lineID: id)
-                }
+                self.currentDirections = [driveBikeResponse, driveWalkResponse, driveDirectResponse]
+                self.viewingRoute = true;
+                self.switchRoute(index: 0)
+                self.segmentedControl.fadeIn()
+                self.directionsController.fadeIn()
             }
-            self.directionsController.fadeIn()
-            self.segmentedControl.move(to: 0)
-            self.segmentedControl.fadeIn()
-            self.viewingRoute = true
         }
     }
     
@@ -318,6 +282,20 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
         mapView.style?.insertLayer(casingLayer, below: layer)
     }
     
+    func drawMarker(lat: Double, lng: Double, markerImage: String) {
+        let point = MGLPointFeature()
+        point.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lng)
+        let markerSource = MGLShapeSource(identifier: "route-marker-source-" + markerImage, shape: point, options: nil)
+        mapView.style?.addSource(markerSource)
+        
+        let markerStyleLayer = MGLSymbolStyleLayer(identifier: "router-marker-layer-" + markerImage, source: markerSource)
+        
+        mapView.style?.setImage(UIImage(named: markerImage)!, forName: "route-marker" + markerImage)
+        markerStyleLayer.iconImageName = NSExpression(forConstantValue: "route-marker" + markerImage)
+        
+        mapView.style?.addLayer(markerStyleLayer)
+    }
+    
     func getRoutingURL(routeType: String, originLat: Double, originLng: Double, destLat: Double, destLng: Double, sessionStarting: String, accessCode: String, deviceId: String) -> String {
         var urlString =  "https://routing.trya.space/v1/" + routeType + "?origin_lat="
         urlString += originLat.toString() + "&origin_lng=";
@@ -328,6 +306,53 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
         urlString += accessCode + "&device_id="
         urlString += deviceId
         return urlString
+    }
+    
+    func switchRoute(index: Int) {
+        clearMap()
+        currentDirections[index].resContent?.routes?[0].forEach { routeSegment in
+            guard let coordinates = routeSegment.directions?.routes?[0].geometry?.coordinates else {
+                self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
+                return
+            }
+            guard let id = routeSegment.name else {
+                self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
+                return
+            }
+            if (id == "drive_park") {
+                let color = UIColor(red: 59/255, green: 178/255, blue: 208/255, alpha: 1)
+                self.drawRoute(coordinates: coordinates, lineColor: color, lineID: id)
+            } else if (id == "walk_bike") {
+                let color = UIColor.lightGray
+                self.drawRoute(coordinates: coordinates, lineColor: color, lineID: id)
+            } else if (id == "bike_dest") {
+                let color = UIColor.green
+                self.drawRoute(coordinates: coordinates, lineColor: color, lineID: id)
+            } else if (id == "walk_dest"){
+                let color = UIColor.lightGray
+                self.drawRoute(coordinates: coordinates, lineColor: color, lineID: id)
+            }
+        }
+        currentDirections[index].resContent?.routes?[0].forEach { routeSegment in
+            guard let coordinates = routeSegment.directions?.routes?[0].geometry?.coordinates else {
+                self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
+                return
+            }
+            guard let id = routeSegment.name else {
+                self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
+                return
+            }
+            if (id == "drive_park") {
+                drawMarker(lat: (routeSegment.origin?.lat)!, lng: (routeSegment.origin?.lng)!, markerImage: "origin")
+                drawMarker(lat: (routeSegment.dest?.lat)!, lng: (routeSegment.dest?.lng)!, markerImage: "parking_0")
+            } else if (id == "walk_bike") {
+                drawMarker(lat: (routeSegment.dest?.lat)!, lng: (routeSegment.dest?.lng)!, markerImage: "biking_0")
+            } else if (id == "bike_dest") {
+                drawMarker(lat: (routeSegment.dest?.lat)!, lng: (routeSegment.dest?.lng)!, markerImage: "destination")
+            } else if (id == "walk_dest"){
+                drawMarker(lat: (routeSegment.dest?.lat)!, lng: (routeSegment.dest?.lng)!, markerImage: "destination")
+            }
+        }
     }
     
     func sendErrorMessage(title: String, message: String) {
@@ -345,8 +370,8 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
     
     func didSelect(_ segmentIndex: Int) {
         if (viewingRoute) {
-            clearMap()
-            self.directionsViewController.updateRouteTypeView(index: segmentIndex)
+            //            self.directionsViewController.updateRouteTypeView(index: segmentIndex)
+            self.switchRoute(index:segmentIndex);
         }
     }
     
@@ -384,11 +409,7 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
             currLocButton.borderColor = UIColor(red:0.24, green:0.77, blue:1.00, alpha:1.0)
             mapView.showsUserLocation = true
             mapView.setUserTrackingMode(.follow, animated: true)
-            print("LATITUDE \(mapView.userLocation?.coordinate.latitude)");
-            print("LONGITUDE \(mapView.userLocation?.coordinate.longitude)");
         } else {
-            print("LATITUDE \(mapView.userLocation?.coordinate.latitude)");
-            print("LONGITUDE \(mapView.userLocation?.coordinate.longitude)");
             mapView.showsUserLocation = false
             mapView.setUserTrackingMode(.none, animated: false)
             currLocButton.leftIconColor = UIColor.lightGray;
