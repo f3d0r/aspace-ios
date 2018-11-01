@@ -11,7 +11,6 @@ import Foundation
 import MapKit
 import CoreLocation
 import Mapbox
-import MapboxGeocoder
 import CircleMenu
 import SwiftyJSON
 import Alamofire
@@ -28,18 +27,18 @@ import Async
 import Intercom
 import SwiftMessages
 import EPContactsPicker
+import Pageboy
 
 class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate, TwicketSegmentedControlDelegate, EPPickerDelegate  {
     
     //MARK: UI VIEWS
     @IBOutlet weak var mapView: MGLMapView!
     @IBOutlet weak var whereToButton: LGButton!
-    @IBOutlet weak var directionsController: UIView!
+    @IBOutlet weak var directionsContainer: UIView!
     @IBOutlet weak var helpButton: LGButton!
     @IBOutlet weak var currLocButton: LGButton!
     @IBOutlet weak var referButton: LGButton!
     var segmentedControl: TwicketSegmentedControl!
-    var directionsViewController: DirectionsViewController!
     
     //MARK: UI VIEW UTILS/STATE
     var locationManager: CLLocationManager!
@@ -51,15 +50,24 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
     var currentLng : Double!
     var currLocationEnabled = true
     
-    let geocoder = Geocoder(accessToken: "pk.eyJ1IjoiZmVkb3ItYXNwYWNlIiwiYSI6ImNqbXJ6Zzc4NjFxdzYzcHFjYmNrb2Q2MGUifQ.mltUs2Zs9ufl4IOhHbD8BA")
-    
     //MARK: DIRECTIONS DATA
     var currentDirections: [RoutingResponse]!
     var viewingRoute = false
     var viewingRouteIndex: Int!
     
+    //MARK: MAP STATE
+    var visibleAnnotations: [MGLAnnotation] = []
+    
+    //MARK: ROUTE PREVIEW STATE
+    var parentPageViewController: ParentPageViewController! = nil
+    
+    var deviceId: String?
+    var accessCode: String?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        print(Defaults.getUserSession)
         
         //MARK: MAP VIEW INIT
         mapView.isRotateEnabled = false;
@@ -94,7 +102,7 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
         
         //MARK: REFER BUTTON INIT
         var referButtonPressedGesture = UITapGestureRecognizer()
-        referButtonPressedGesture = UITapGestureRecognizer(target: self, action: #selector(MapController.referPressed(_:)))
+        referButtonPressedGesture = UITapGestureRecognizer(target: self, action: #selector(MapController.logoutPressed(_:)))
         referButtonPressedGesture.numberOfTapsRequired = 1
         referButtonPressedGesture.numberOfTouchesRequired = 1
         referButton.addGestureRecognizer(referButtonPressedGesture)
@@ -107,21 +115,17 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
         
         //MARK: SEGMENTED CONTROL INIT
         let titles = ["Park & Bike", "Park & Walk", "Just Park"]
-        let frame = CGRect(x: 0, y: mapView.frame.height-120, width: view.frame.width, height: 40)
+        var topDelta = (mapView.frame.maxY - view.frame.minY) - (mapView.frame.height)
+        let frame = CGRect(x: 0, y: view.frame.height-topDelta-40, width: view.frame.width, height: 40)
         segmentedControl = TwicketSegmentedControl(frame: frame)
         segmentedControl.setSegmentItems(titles)
         segmentedControl.delegate = self
         segmentedControl.isHidden = true
         segmentedControl.sliderBackgroundColor = UIColor(red:0.24, green:0.77, blue:1.00, alpha:1.0)
+        
         mapView.addSubview(segmentedControl)
         
-        //MARK: DIRECTIONS CONTROLLER INIT
-        directionsViewController = (self.storyboard?.instantiateViewController(withIdentifier: "DirectionsViewController") as! DirectionsViewController)
-        directionsViewController.view.frame = directionsController.bounds
-        directionsController.addSubview(directionsViewController.view)
-        addChild(directionsViewController)
-        directionsViewController.didMove(toParent: self)
-        directionsController.isHidden = true
+        showTitle()
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -144,19 +148,26 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
                 initMapLocation = true
             }
             if (currLocationEnabled) {
-                moveMapToLatLng(latitude: currentLat, longitude: currentLng)
+                if let finalLat = currentLat as? Double {
+                    if let finalLng = currentLng as? Double {
+                        moveMapToLatLng(latitude: finalLat, longitude: finalLng)
+                    } else {
+                        moveMapToLatLng(latitude: 0, longitude: 0)
+                    }
+                } else {
+                    moveMapToLatLng(latitude: 0, longitude: 0)
+                }
             }
         }
     }
     
     // Use the default marker. See also: our view annotation or custom marker examples.
-    func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
-        return nil
-    }
-    
-    // Allow callout view to appear when an annotation is tapped.
-    func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
-        return true
+    func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
+        if let castAnnotation = annotation as? MyCustomPointAnnotation {
+            return MGLAnnotationImage(image: UIImage(named: (castAnnotation.name)!)!.resize(targetSize: CGSize(width: 50, height: 50)), reuseIdentifier: castAnnotation.name!)
+        } else {
+            return nil;
+        }
     }
     
     @objc func hideKeyBoard(sender: UITapGestureRecognizer? = nil){
@@ -169,19 +180,41 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
     
     
     func moveMapToLatLng(latitude: Double, longitude: Double, fromDistance: Double = 1250) {
-        let center = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        let camera = MGLMapCamera(lookingAtCenter: center, fromDistance: fromDistance, pitch: 0, heading: 0)
+        let camera = MGLMapCamera(lookingAtCenter: CLLocationCoordinate2D(latitude: latitude, longitude: longitude), fromDistance: fromDistance, pitch: 0, heading: 0)
         self.mapView.setCamera(camera, withDuration: 2, animationTimingFunction: CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut))
+    }
+    
+    // Zoom to the annotation when it is selected
+    func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
+        let camera = MGLMapCamera(lookingAtCenter: annotation.coordinate, fromDistance: 4000, pitch: 0, heading: 0)
+        mapView.fly(to: camera, completionHandler: nil)
+    }
+    
+    func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
+        return true
+    }
+    
+    func moveMapToBbox(coords: [LngLat]) {
+        var annotations: [MGLAnnotation] = []
+        coords.forEach { currentCoord in
+            let pointA = MyCustomPointAnnotation()
+            pointA.coordinate = CLLocationCoordinate2D(latitude: currentCoord.lat, longitude: currentCoord.lng)
+            pointA.name = currentCoord.name
+            annotations.append(pointA)
+        }
+        mapView.showAnnotations(annotations, edgePadding: UIEdgeInsets(top: 90, left: 15, bottom: 150, right: 15), animated: true)
+        mapView.addAnnotations(annotations)
+        visibleAnnotations = annotations
     }
     
     func getRoute(fromLat: Double, fromLng: Double, toLat: Double, toLng: Double, routeType: String) {
         let group = DispatchGroup()
         
-        let driveBikeUrl = getRoutingURL(routeType: "get_drive_bike_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: "07fa1e185317402c043cff15c13da745", deviceId: "e2fad51a-da1c-40b1-9c7a-e8a12fbb3cb5")
+        let driveBikeUrl = getRoutingURL(routeType: "get_drive_bike_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "", deviceId: deviceId!)
         
-        let driveWalkUrl = getRoutingURL(routeType: "get_drive_walk_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: "07fa1e185317402c043cff15c13da745", deviceId: "e2fad51a-da1c-40b1-9c7a-e8a12fbb3cb5")
+        let driveWalkUrl = getRoutingURL(routeType: "get_drive_walk_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "", deviceId: deviceId!)
         
-        let driveDirectUrl = getRoutingURL(routeType: "get_drive_direct_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: "07fa1e185317402c043cff15c13da745", deviceId: "e2fad51a-da1c-40b1-9c7a-e8a12fbb3cb5")
+        let driveDirectUrl = getRoutingURL(routeType: "get_drive_direct_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "", deviceId: deviceId!)
         
         group.enter()
         var driveBikeResponse: RoutingResponse!
@@ -228,9 +261,9 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
             } else {
                 self.currentDirections = [driveBikeResponse, driveWalkResponse, driveDirectResponse]
                 self.viewingRoute = true;
-                self.switchRoute(index: 0)
+                self.switchRoute(index: 0, initRouteInfoView: true)
                 self.segmentedControl.fadeIn()
-                self.directionsController.fadeIn()
+                self.directionsContainer.fadeIn()
             }
         }
     }
@@ -248,6 +281,7 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
                 mapView.style?.removeSource(currSource)
             }
         }
+        mapView.removeAnnotations(visibleAnnotations)
     }
     
     func drawRoute(coordinates: [[Double]], lineColor: UIColor, lineID: String) {
@@ -282,20 +316,6 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
         mapView.style?.insertLayer(casingLayer, below: layer)
     }
     
-    func drawMarker(lat: Double, lng: Double, markerImage: String) {
-        let point = MGLPointFeature()
-        point.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lng)
-        let markerSource = MGLShapeSource(identifier: "route-marker-source-" + markerImage, shape: point, options: nil)
-        mapView.style?.addSource(markerSource)
-        
-        let markerStyleLayer = MGLSymbolStyleLayer(identifier: "router-marker-layer-" + markerImage, source: markerSource)
-        
-        mapView.style?.setImage(UIImage(named: markerImage)!, forName: "route-marker" + markerImage)
-        markerStyleLayer.iconImageName = NSExpression(forConstantValue: "route-marker" + markerImage)
-        
-        mapView.style?.addLayer(markerStyleLayer)
-    }
-    
     func getRoutingURL(routeType: String, originLat: Double, originLng: Double, destLat: Double, destLng: Double, sessionStarting: String, accessCode: String, deviceId: String) -> String {
         var urlString =  "https://routing.trya.space/v1/" + routeType + "?origin_lat="
         urlString += originLat.toString() + "&origin_lng=";
@@ -308,8 +328,26 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
         return urlString
     }
     
-    func switchRoute(index: Int) {
+    func switchRoute(index: Int, initRouteInfoView: Bool) {
         clearMap()
+        mapView.showsUserLocation = false
+        var coords: [LngLat] = []
+        currentDirections[index].resContent?.routes?[0].forEach { routeSegment in
+            guard let id = routeSegment.name else {
+                self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
+                return
+            }
+            if (id == "drive_park") {
+                coords.append(LngLat(lng: (routeSegment.origin?.lng)!, lat: (routeSegment.origin?.lat)!, name: "origin"))
+                coords.append(LngLat(lng: (routeSegment.dest?.lng)!, lat: (routeSegment.dest?.lat)!, name: "parking_0"))
+            } else if (id == "walk_bike") {
+                coords.append(LngLat(lng: (routeSegment.dest?.lng)!, lat: (routeSegment.dest?.lat)!, name: "biking_0"))
+            } else if (id == "bike_dest") {
+                coords.append(LngLat(lng: (routeSegment.dest?.lng)!, lat: (routeSegment.dest?.lat)!, name: "destination"))
+            } else if (id == "walk_dest"){
+                coords.append(LngLat(lng: (routeSegment.dest?.lng)!, lat: (routeSegment.dest?.lat)!, name: "destination"))
+            }
+        }
         currentDirections[index].resContent?.routes?[0].forEach { routeSegment in
             guard let coordinates = routeSegment.directions?.routes?[0].geometry?.coordinates else {
                 self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
@@ -333,26 +371,8 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
                 self.drawRoute(coordinates: coordinates, lineColor: color, lineID: id)
             }
         }
-        currentDirections[index].resContent?.routes?[0].forEach { routeSegment in
-            guard let coordinates = routeSegment.directions?.routes?[0].geometry?.coordinates else {
-                self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
-                return
-            }
-            guard let id = routeSegment.name else {
-                self.sendErrorMessage(title: "Error", message: "Whoops! Looks like something went wrong. Please try again.")
-                return
-            }
-            if (id == "drive_park") {
-                drawMarker(lat: (routeSegment.origin?.lat)!, lng: (routeSegment.origin?.lng)!, markerImage: "origin")
-                drawMarker(lat: (routeSegment.dest?.lat)!, lng: (routeSegment.dest?.lng)!, markerImage: "parking_0")
-            } else if (id == "walk_bike") {
-                drawMarker(lat: (routeSegment.dest?.lat)!, lng: (routeSegment.dest?.lng)!, markerImage: "biking_0")
-            } else if (id == "bike_dest") {
-                drawMarker(lat: (routeSegment.dest?.lat)!, lng: (routeSegment.dest?.lng)!, markerImage: "destination")
-            } else if (id == "walk_dest"){
-                drawMarker(lat: (routeSegment.dest?.lat)!, lng: (routeSegment.dest?.lng)!, markerImage: "destination")
-            }
-        }
+        loadRouteInfoView(index: index, initRouteInfoView: initRouteInfoView)
+        moveMapToBbox(coords: coords)
     }
     
     func sendErrorMessage(title: String, message: String) {
@@ -370,8 +390,7 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
     
     func didSelect(_ segmentIndex: Int) {
         if (viewingRoute) {
-            //            self.directionsViewController.updateRouteTypeView(index: segmentIndex)
-            self.switchRoute(index:segmentIndex);
+            self.switchRoute(index:segmentIndex, initRouteInfoView: false);
         }
     }
     
@@ -386,6 +405,14 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
         let contactPickerScene = EPContactsPicker(delegate: self, multiSelection:true, subtitleCellType: SubtitleCellValue.phoneNumber)
         let navigationController = UINavigationController(rootViewController: contactPickerScene)
         self.present(navigationController, animated: true, completion: nil)
+    }
+    
+    @objc func logoutPressed(_ sender: UITapGestureRecognizer) {
+        Defaults.clearUserData()
+        Intercom.logout()
+        let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let newViewController = storyBoard.instantiateViewController(withIdentifier: "LoginPhoneViewController") as! LoginPhoneViewController
+        self.present(newViewController, animated: true, completion: nil)
     }
     
     func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts : [EPContact]) {
@@ -411,10 +438,42 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
             mapView.setUserTrackingMode(.follow, animated: true)
         } else {
             mapView.showsUserLocation = false
-            mapView.setUserTrackingMode(.none, animated: false)
+            mapView.setUserTrackingMode(.none, animated: true)
             currLocButton.leftIconColor = UIColor.lightGray;
             currLocButton.borderColor = UIColor.lightGray;
         }
+    }
+    
+    func loadRouteInfoView(index: Int, initRouteInfoView: Bool) {
+        if (initRouteInfoView) {
+            parentPageViewController = (self.storyboard?.instantiateViewController(withIdentifier: "ParentPageViewController") as! ParentPageViewController)
+            parentPageViewController.routeResponse = currentDirections[index]
+            parentPageViewController.mapView = mapView
+            parentPageViewController.initView()
+            parentPageViewController.view.frame = directionsContainer.bounds
+            directionsContainer.addSubview(parentPageViewController.view)
+            addChild(parentPageViewController)
+            parentPageViewController.didMove(toParent: self)
+        } else {
+            parentPageViewController?.routeResponse = currentDirections[index]
+            parentPageViewController.initView()
+        }
+    }
+    
+    func showTitle() {
+        let messageView: MessageView = MessageView.viewFromNib(layout: .centeredView)
+        messageView.configureBackgroundView(width: 250)
+        messageView.configureContent(title: "Hey There!", body: "Thanks for giving aspace a try. We're currently available in Seattle and Portland, but if you want to suggest a city for us to bring onboard, press the '?' icon in the top-left to send us a message.", iconImage: nil, iconText: "👋", buttonImage: nil, buttonTitle: "OK!") { _ in
+            SwiftMessages.hide()
+        }
+        messageView.backgroundView.backgroundColor = UIColor.init(white: 0.97, alpha: 1)
+        messageView.backgroundView.layer.cornerRadius = 10
+        var config = SwiftMessages.defaultConfig
+        config.presentationStyle = .center
+        config.duration = .forever
+        config.dimMode = .blur(style: .dark, alpha: 1, interactive: true)
+        config.presentationContext  = .window(windowLevel: UIWindow.Level.statusBar)
+        SwiftMessages.show(config: config, view: messageView)
     }
 }
 
@@ -438,13 +497,13 @@ extension MapController: GMSAutocompleteViewControllerDelegate {
     
     // Turn the network activity indicator on and off again.
     func didRequestAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
-        directionsController.isHidden = true
+        directionsContainer.isHidden = true
         segmentedControl.isHidden = true
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
     }
     
     func didUpdateAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
-        directionsController.isHidden = true
+        directionsContainer.isHidden = true
         segmentedControl.isHidden = true
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
@@ -486,4 +545,16 @@ extension String {
         let toIndex = index(self.startIndex, offsetBy: to)
         return substring(to: toIndex)
     }
+}
+
+extension UIImage {
+    func resize(targetSize: CGSize) -> UIImage {
+        return UIGraphicsImageRenderer(size:targetSize).image { _ in
+            self.draw(in: CGRect(origin: .zero, size: targetSize))
+        }
+    }
+}
+
+class MyCustomPointAnnotation: MGLPointAnnotation {
+    var name: String?
 }

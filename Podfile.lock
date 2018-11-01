@@ -48,6 +48,7 @@ PODS:
   - MapboxNavigationNative (3.2.0)
   - MapboxSpeech (0.0.2)
   - ObjectMapper (3.3.0)
+  - Pageboy (2.6.1)
   - paper-onboarding (5.0.0)
   - PhoneNumberKit (2.5.0):
     - PhoneNumberKit/PhoneNumberKitCore (= 2.5.0)
@@ -102,6 +103,7 @@ DEPENDENCIES:
   - Mapbox-iOS-SDK
   - MapboxGeocoder.swift
   - MapboxNavigation
+  - Pageboy
   - paper-onboarding
   - PhoneNumberKit
   - PinCodeTextField
@@ -112,6 +114,7 @@ DEPENDENCIES:
   - SHSearchBar
   - SwiftLint
   - SwiftMessages
+  - Turf
   - TwicketSegmentedControl
 
 SPEC CHECKSUMS:
@@ -140,6 +143,7 @@ SPEC CHECKSUMS:
   MapboxNavigationNative: 1173dc73d6643e321065cfaa55d253f67b55ab12
   MapboxSpeech: 9d46bca4d7e96318ec8d6ce93a1153ebaef319ba
   ObjectMapper: b612bf8c8e99c4dc0bb6013a51f7c27966ed5da9
+  Pageboy: c2a25d1c280e9b622014b692626f1ff9298e0ad2
   paper-onboarding: a2e3a710fd27ac0b5635ec5490660e7ec09289b5
   PhoneNumberKit: 32a1cd1e0aa9e950feb01886a22fd7386b8cf903
   PinCodeTextField: a3c39be58bde3ed1d6888d0fb1d88b0a4a2277cc
@@ -159,6 +163,6 @@ SPEC CHECKSUMS:
   Turf: 9763a5a2d7da05dfdd5ed56aeb0414b291b0fee1
   TwicketSegmentedControl: 6d7a4cf243657e0ac3f00d06d873a25334c04042
 
-PODFILE CHECKSUM: 14d4137ced38dfd27b251e15c1a6814958ef70a2
+PODFILE CHECKSUM: 08004308b54ddb0ea6c53cd8b8ceac97504299fd
 
 COCOAPODS: 1.4.0

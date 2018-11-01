@@ -25,7 +25,7 @@ import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
 import GooglePlaces
-import CardParts
+import Pageboy
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate {
@@ -37,7 +37,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         Intercom.setApiKey("ios_sdk-9db3815efc7d39e14289e016a1c346e45ea530be", forAppId:"***REMOVED***")
-        Intercom.registerUnidentifiedUser();
         Instabug.start(withToken: "9a0192e6ba004fe7b5c5fe2a79710f56", invocationEvents: [.shake, .screenshot])
         
         DropDown.startListeningToKeyboard()
@@ -47,7 +46,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         locationManager.requestWhenInUseAuthorization()
         
         GMSPlacesClient.provideAPIKey("***REMOVED***")
-        CardPartsMintTheme().apply()
+        if (Defaults.getUserSession.isValid()) {
+            let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            let mapController: MapController = mainStoryboard.instantiateViewController(withIdentifier: "mapViewController") as! MapController
+            self.window?.rootViewController = mapController
+            self.window?.makeKeyAndVisible()
+        } else {
+            let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginPhoneController: LoginPhoneViewController = mainStoryboard.instantiateViewController(withIdentifier: "LoginPhoneViewController") as! LoginPhoneViewController
+            self.window?.rootViewController = loginPhoneController
+            self.window?.makeKeyAndVisible()
+        }
         return true
     }
     

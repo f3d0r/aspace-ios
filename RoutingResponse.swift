@@ -271,13 +271,13 @@ class RoutingMetadata: Codable {
 
 class RoutingStep: Codable {
     let intersections: [RoutingIntersection]?
-    let drivingSide: RoutingDrivingSide?
+    let drivingSide: String?
     let geometry: RoutingGeometry?
     let duration: Double?
     let distance: Double?
     let name: String?
     let weight: Double?
-    let mode: RoutingMode?
+    let mode: String?
     let maneuver: RoutingManeuver?
     let instruction: String?
     let ref: String?
@@ -298,7 +298,7 @@ class RoutingStep: Codable {
         case destinations = "destinations"
     }
     
-    init(intersections: [RoutingIntersection]?, drivingSide: RoutingDrivingSide?, geometry: RoutingGeometry?, duration: Double?, distance: Double?, name: String?, weight: Double?, mode: RoutingMode?, maneuver: RoutingManeuver?, instruction: String?, ref: String?, destinations: String?) {
+    init(intersections: [RoutingIntersection]?, drivingSide: String?, geometry: RoutingGeometry?, duration: Double?, distance: Double?, name: String?, weight: Double?, mode: String?, maneuver: RoutingManeuver?, instruction: String?, ref: String?, destinations: String?) {
         self.intersections = intersections
         self.drivingSide = drivingSide
         self.geometry = geometry
@@ -329,7 +329,7 @@ class RoutingIntersection: Codable {
     let location: [Double]?
     let bearings: [Int]?
     let intersectionIn: Int?
-    let classes: [RoutingClass]?
+    let classes: [String]?
     let lanes: [RoutingLane]?
     
     enum CodingKeys: String, CodingKey {
@@ -342,7 +342,7 @@ class RoutingIntersection: Codable {
         case lanes = "lanes"
     }
     
-    init(out: Int?, entry: [Bool]?, location: [Double]?, bearings: [Int]?, intersectionIn: Int?, classes: [RoutingClass]?, lanes: [RoutingLane]?) {
+    init(out: Int?, entry: [Bool]?, location: [Double]?, bearings: [Int]?, intersectionIn: Int?, classes: [String]?, lanes: [RoutingLane]?) {
         self.out = out
         self.entry = entry
         self.location = location
@@ -360,14 +360,14 @@ enum RoutingClass: String, Codable {
 
 class RoutingLane: Codable {
     let valid: Bool?
-    let indications: [RoutingDrivingSide]?
+    let indications: [String]?
     
     enum CodingKeys: String, CodingKey {
         case valid = "valid"
         case indications = "indications"
     }
     
-    init(valid: Bool?, indications: [RoutingDrivingSide]?) {
+    init(valid: Bool?, indications: [String]?) {
         self.valid = valid
         self.indications = indications
     }
@@ -378,7 +378,7 @@ class RoutingManeuver: Codable {
     let bearingBefore: Int?
     let type: String?
     let location: [Double]?
-    let modifier: RoutingDrivingSide?
+    let modifier: String?
     
     enum CodingKeys: String, CodingKey {
         case bearingAfter = "bearing_after"
@@ -388,7 +388,7 @@ class RoutingManeuver: Codable {
         case modifier = "modifier"
     }
     
-    init(bearingAfter: Int?, bearingBefore: Int?, type: String?, location: [Double]?, modifier: RoutingDrivingSide?) {
+    init(bearingAfter: Int?, bearingBefore: Int?, type: String?, location: [Double]?, modifier: String?) {
         self.bearingAfter = bearingAfter
         self.bearingBefore = bearingBefore
         self.type = type

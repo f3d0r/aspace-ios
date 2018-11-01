@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		14A812B84D001B80FB738420 /* Pods_aspaceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B60524654B1F4F3F44729D3 /* Pods_aspaceTests.framework */; };
 		40F8AE9DECA31BA559CE1248 /* Pods_aspaceUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C74AD52E455D78BC4E6B7460 /* Pods_aspaceUITests.framework */; };
+		A32BBE16218BA02E007932C9 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32BBE15218BA02E007932C9 /* UserDefaults.swift */; };
+		A332ADA22187D9DA00F40117 /* LngLat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A332ADA12187D9DA00F40117 /* LngLat.swift */; };
+		A332ADAA2189781600F40117 /* ParentPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A332ADA92189781600F40117 /* ParentPageViewController.swift */; };
 		A34D5B0C2162BAB200A9082E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34D5B0B2162BAB200A9082E /* AppDelegate.swift */; };
 		A34D5B0E2162BAB200A9082E /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34D5B0D2162BAB200A9082E /* MapController.swift */; };
 		A34D5B112162BAB200A9082E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A34D5B0F2162BAB200A9082E /* Main.storyboard */; };
@@ -19,7 +22,6 @@
 		A3694B48216333D1003354DD /* LoginPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3694B47216333D1003354DD /* LoginPhoneViewController.swift */; };
 		A3694B4A2163589D003354DD /* LoginPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3694B492163589D003354DD /* LoginPinViewController.swift */; };
 		A3903F1A218265D60027068E /* RoutingResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3903F19218265D60027068E /* RoutingResponse.swift */; };
-		A3903F1E2183B0D50027068E /* CardPartPagedViewCardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3903F1D2183B0D50027068E /* CardPartPagedViewCardController.swift */; };
 		A3C1FDA8216C095C00F312FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A3C1FDA7216C095C00F312FB /* Assets.xcassets */; };
 		A3C9D9F72183C9DD00106143 /* DirectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C9D9F62183C9DD00106143 /* DirectionsViewController.swift */; };
 		F33F8EE70AC56D1F1CC8E60E /* Pods_aspace.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13AEA7C8E3A20257428EF201 /* Pods_aspace.framework */; };
@@ -49,6 +51,9 @@
 		4FDA950CF8C7522874D6F878 /* Pods-aspaceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aspaceTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-aspaceTests/Pods-aspaceTests.release.xcconfig"; sourceTree = "<group>"; };
 		586288A931D4F085594A1067 /* Pods-aspace.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aspace.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aspace/Pods-aspace.debug.xcconfig"; sourceTree = "<group>"; };
 		8F2FE2A6DE0E039C05995D08 /* Pods-aspaceUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aspaceUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aspaceUITests/Pods-aspaceUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		A32BBE15218BA02E007932C9 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
+		A332ADA12187D9DA00F40117 /* LngLat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LngLat.swift; sourceTree = "<group>"; };
+		A332ADA92189781600F40117 /* ParentPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentPageViewController.swift; sourceTree = "<group>"; };
 		A34D5B082162BAB200A9082E /* aspace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = aspace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A34D5B0B2162BAB200A9082E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A34D5B0D2162BAB200A9082E /* MapController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
@@ -65,7 +70,6 @@
 		A3694B47216333D1003354DD /* LoginPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPhoneViewController.swift; sourceTree = "<group>"; };
 		A3694B492163589D003354DD /* LoginPinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPinViewController.swift; sourceTree = "<group>"; };
 		A3903F19218265D60027068E /* RoutingResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingResponse.swift; sourceTree = "<group>"; };
-		A3903F1D2183B0D50027068E /* CardPartPagedViewCardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardPartPagedViewCardController.swift; sourceTree = "<group>"; };
 		A3C1FDA7216C095C00F312FB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A3C9D9F62183C9DD00106143 /* DirectionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsViewController.swift; sourceTree = "<group>"; };
 		C74AD52E455D78BC4E6B7460 /* Pods_aspaceUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_aspaceUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -127,6 +131,7 @@
 		A3410457218188C90087D6B2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A332ADA12187D9DA00F40117 /* LngLat.swift */,
 				A3903F19218265D60027068E /* RoutingResponse.swift */,
 			);
 			name = Models;
@@ -166,10 +171,11 @@
 				A3C1FDA7216C095C00F312FB /* Assets.xcassets */,
 				A34D5B0D2162BAB200A9082E /* MapController.swift */,
 				A3C9D9F62183C9DD00106143 /* DirectionsViewController.swift */,
+				A332ADA92189781600F40117 /* ParentPageViewController.swift */,
 				A34D5B0F2162BAB200A9082E /* Main.storyboard */,
-				A3903F1D2183B0D50027068E /* CardPartPagedViewCardController.swift */,
 				A34D5B142162BAB200A9082E /* LaunchScreen.storyboard */,
 				A34D5B172162BAB200A9082E /* Info.plist */,
+				A32BBE15218BA02E007932C9 /* UserDefaults.swift */,
 			);
 			path = aspace;
 			sourceTree = "<group>";
@@ -269,6 +275,11 @@
 				TargetAttributes = {
 					A34D5B072162BAB200A9082E = {
 						CreatedOnToolsVersion = 10.0;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					A34D5B1B2162BAB200A9082E = {
 						CreatedOnToolsVersion = 10.0;
@@ -361,6 +372,7 @@
 				"${BUILT_PRODUCTS_DIR}/MapboxSpeech/MapboxSpeech.framework",
 				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/PMSuperButton/PMSuperButton.framework",
+				"${BUILT_PRODUCTS_DIR}/Pageboy/Pageboy.framework",
 				"${BUILT_PRODUCTS_DIR}/PhoneNumberKit/PhoneNumberKit.framework",
 				"${BUILT_PRODUCTS_DIR}/PinCodeTextField/PinCodeTextField.framework",
 				"${BUILT_PRODUCTS_DIR}/Polyline/Polyline.framework",
@@ -405,6 +417,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxSpeech.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PMSuperButton.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Pageboy.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PhoneNumberKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PinCodeTextField.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Polyline.framework",
@@ -574,13 +587,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A3903F1E2183B0D50027068E /* CardPartPagedViewCardController.swift in Sources */,
+				A332ADA22187D9DA00F40117 /* LngLat.swift in Sources */,
 				A34D5B0E2162BAB200A9082E /* MapController.swift in Sources */,
 				A34D5B0C2162BAB200A9082E /* AppDelegate.swift in Sources */,
 				A3694B4A2163589D003354DD /* LoginPinViewController.swift in Sources */,
 				A3694B48216333D1003354DD /* LoginPhoneViewController.swift in Sources */,
+				A32BBE16218BA02E007932C9 /* UserDefaults.swift in Sources */,
 				A3C9D9F72183C9DD00106143 /* DirectionsViewController.swift in Sources */,
 				A3903F1A218265D60027068E /* RoutingResponse.swift in Sources */,
+				A332ADAA2189781600F40117 /* ParentPageViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -763,7 +778,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = space.trya;
+				PRODUCT_BUNDLE_IDENTIFIER = aspace;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -782,7 +797,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = space.trya;
+				PRODUCT_BUNDLE_IDENTIFIER = aspace;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
