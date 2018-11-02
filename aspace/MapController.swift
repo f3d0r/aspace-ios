@@ -211,11 +211,11 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
     func getRoute(fromLat: Double, fromLng: Double, toLat: Double, toLng: Double, routeType: String) {
         let group = DispatchGroup()
         
-        let driveBikeUrl = getRoutingURL(routeType: "get_drive_bike_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "", deviceId: deviceId ?? "")
+        let driveBikeUrl = getRoutingURL(routeType: "get_drive_bike_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "0", deviceId: deviceId ?? "0")
         
-        let driveWalkUrl = getRoutingURL(routeType: "get_drive_walk_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "", deviceId: deviceId ?? "")
+        let driveWalkUrl = getRoutingURL(routeType: "get_drive_walk_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "0", deviceId: deviceId ?? "0")
         
-        let driveDirectUrl = getRoutingURL(routeType: "get_drive_direct_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "", deviceId: deviceId ?? "")
+        let driveDirectUrl = getRoutingURL(routeType: "get_drive_direct_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "0", deviceId: deviceId ?? "0")
         
         group.enter()
         var driveBikeResponse: RoutingResponse!

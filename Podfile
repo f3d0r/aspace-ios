@@ -34,6 +34,9 @@ target 'aspace' do
     pod 'EPContactsPicker'
     pod 'Turf'
     pod 'Pageboy'
+    pod 'FlagPhoneNumber'
+    pod 'DigitInputView'
+    pod 'PMSuperButton'
 
     target 'aspaceTests' do
         inherit! :search_paths
