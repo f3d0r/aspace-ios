@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OSI-kg-i8q">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OSI-kg-i8q">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -265,7 +265,7 @@
                                     <constraint firstItem="j0d-ad-tfV" firstAttribute="leading" secondItem="Ek8-av-2lS" secondAttribute="leading" constant="25" id="K3R-Pn-XEB"/>
                                     <constraint firstItem="lK3-pu-08l" firstAttribute="leading" secondItem="Ek8-av-2lS" secondAttribute="leading" constant="25" id="f3V-7Y-9Hb"/>
                                     <constraint firstItem="gSJ-y2-MJ8" firstAttribute="trailing" secondItem="Ek8-av-2lS" secondAttribute="trailing" constant="-25" id="rGN-PE-bfB"/>
-                                    <constraint firstItem="j0d-ad-tfV" firstAttribute="bottom" secondItem="Ek8-av-2lS" secondAttribute="bottom" constant="-40" id="wRg-3j-PcV"/>
+                                    <constraint firstItem="j0d-ad-tfV" firstAttribute="bottom" secondItem="Ek8-av-2lS" secondAttribute="bottom" constant="-60" id="wRg-3j-PcV"/>
                                     <constraint firstItem="gSJ-y2-MJ8" firstAttribute="centerY" secondItem="4Th-Dw-djJ" secondAttribute="centerY" id="zql-dF-4Oq"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -289,7 +289,7 @@
                         <viewLayoutGuide key="safeArea" id="rKb-AG-Sad"/>
                     </view>
                     <connections>
-                        <outlet property="currLocButton" destination="j0d-ad-tfV" id="SfY-6Q-8IZ"/>
+                        <outlet property="currLocButton" destination="j0d-ad-tfV" id="p40-MO-rrk"/>
                         <outlet property="directionsContainer" destination="OuZ-kI-V3u" id="f1H-Mq-02z"/>
                         <outlet property="helpButton" destination="lK3-pu-08l" id="C1d-0j-dZq"/>
                         <outlet property="mapView" destination="Ek8-av-2lS" id="XhL-GH-kgB"/>

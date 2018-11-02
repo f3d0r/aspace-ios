@@ -35,8 +35,9 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
     @IBOutlet weak var mapView: MGLMapView!
     @IBOutlet weak var whereToButton: LGButton!
     @IBOutlet weak var directionsContainer: UIView!
-    @IBOutlet weak var helpButton: LGButton!
     @IBOutlet weak var currLocButton: LGButton!
+    @IBOutlet weak var helpButton: LGButton!
+    
     @IBOutlet weak var referButton: LGButton!
     var segmentedControl: TwicketSegmentedControl!
     
@@ -210,11 +211,11 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
     func getRoute(fromLat: Double, fromLng: Double, toLat: Double, toLng: Double, routeType: String) {
         let group = DispatchGroup()
         
-        let driveBikeUrl = getRoutingURL(routeType: "get_drive_bike_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "", deviceId: deviceId!)
+        let driveBikeUrl = getRoutingURL(routeType: "get_drive_bike_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "", deviceId: deviceId ?? "")
         
-        let driveWalkUrl = getRoutingURL(routeType: "get_drive_walk_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "", deviceId: deviceId!)
+        let driveWalkUrl = getRoutingURL(routeType: "get_drive_walk_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "", deviceId: deviceId ?? "")
         
-        let driveDirectUrl = getRoutingURL(routeType: "get_drive_direct_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "", deviceId: deviceId!)
+        let driveDirectUrl = getRoutingURL(routeType: "get_drive_direct_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "", deviceId: deviceId ?? "")
         
         group.enter()
         var driveBikeResponse: RoutingResponse!
@@ -427,6 +428,7 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
     
     @objc func currLocPressed(_ sender: UITapGestureRecognizer) {
         currLocToggle()
+        print("currLocPressed")
     }
     
     func currLocToggle() {
