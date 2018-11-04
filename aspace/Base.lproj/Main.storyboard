@@ -160,6 +160,31 @@
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="fullyRoundedCorners" value="YES"/>
                                         </userDefinedRuntimeAttributes>
                                     </view>
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3df-f5-haa" userLabel="Change Origin" customClass="LGButton" customModule="LGButton">
+                                        <rect key="frame" x="127" y="376" width="120" height="60"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
+                                                <color key="value" red="0.24313725489999999" green="0.7725490196" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="leftIconString" value="compass"/>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="leftIconColor">
+                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="leftIconFontName" value="fa"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="titleFontSize">
+                                                <real key="value" value="20"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="loadingString" value="Loading..."/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="loadingFontSize">
+                                                <real key="value" value="20"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="fullyRoundedCorners" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="leftIconFontSize">
+                                                <real key="value" value="20"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gSJ-y2-MJ8" userLabel="Logout Button" customClass="LGButton" customModule="LGButton">
                                         <rect key="frame" x="127" y="337" width="120" height="60"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -262,8 +287,12 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="lK3-pu-08l" firstAttribute="centerY" secondItem="4Th-Dw-djJ" secondAttribute="centerY" id="4Dh-Ek-TPc"/>
+                                    <constraint firstItem="3df-f5-haa" firstAttribute="leading" secondItem="lK3-pu-08l" secondAttribute="trailing" constant="5" id="8O0-wb-cbN"/>
+                                    <constraint firstItem="3df-f5-haa" firstAttribute="centerY" secondItem="4Th-Dw-djJ" secondAttribute="centerY" id="CS7-fw-SGo"/>
                                     <constraint firstItem="j0d-ad-tfV" firstAttribute="leading" secondItem="Ek8-av-2lS" secondAttribute="leading" constant="25" id="K3R-Pn-XEB"/>
                                     <constraint firstItem="lK3-pu-08l" firstAttribute="leading" secondItem="Ek8-av-2lS" secondAttribute="leading" constant="25" id="f3V-7Y-9Hb"/>
+                                    <constraint firstItem="4Th-Dw-djJ" firstAttribute="trailing" secondItem="gSJ-y2-MJ8" secondAttribute="leading" constant="-5" id="fY4-a8-Wtz"/>
+                                    <constraint firstItem="3df-f5-haa" firstAttribute="trailing" secondItem="4Th-Dw-djJ" secondAttribute="leading" constant="-5" id="i0T-OQ-tMG"/>
                                     <constraint firstItem="gSJ-y2-MJ8" firstAttribute="trailing" secondItem="Ek8-av-2lS" secondAttribute="trailing" constant="-25" id="rGN-PE-bfB"/>
                                     <constraint firstItem="j0d-ad-tfV" firstAttribute="bottom" secondItem="Ek8-av-2lS" secondAttribute="bottom" constant="-60" id="wRg-3j-PcV"/>
                                     <constraint firstItem="gSJ-y2-MJ8" firstAttribute="centerY" secondItem="4Th-Dw-djJ" secondAttribute="centerY" id="zql-dF-4Oq"/>
@@ -271,12 +300,16 @@
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="***REMOVED***"/>
                                 </userDefinedRuntimeAttributes>
+                                <variation key="default">
+                                    <mask key="subviews">
+                                        <exclude reference="j0d-ad-tfV"/>
+                                    </mask>
+                                </variation>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="OuZ-kI-V3u" firstAttribute="bottom" secondItem="Ek8-av-2lS" secondAttribute="bottom" constant="-40" id="2Of-9a-21i"/>
-                            <constraint firstItem="4Th-Dw-djJ" firstAttribute="centerX" secondItem="rKb-AG-Sad" secondAttribute="centerX" id="6lQ-b1-xns"/>
                             <constraint firstItem="4Th-Dw-djJ" firstAttribute="top" secondItem="rKb-AG-Sad" secondAttribute="top" constant="10" id="7NR-oL-XCp"/>
                             <constraint firstItem="OuZ-kI-V3u" firstAttribute="trailing" secondItem="Ek8-av-2lS" secondAttribute="trailing" id="A9f-c4-jiZ"/>
                             <constraint firstItem="Ek8-av-2lS" firstAttribute="top" secondItem="qxv-DN-vvc" secondAttribute="top" id="GoE-iZ-1nV"/>
