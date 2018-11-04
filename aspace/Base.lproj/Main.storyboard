@@ -322,6 +322,7 @@
                         <viewLayoutGuide key="safeArea" id="rKb-AG-Sad"/>
                     </view>
                     <connections>
+                        <outlet property="changeOriginButton" destination="3df-f5-haa" id="QMN-Hx-QeD"/>
                         <outlet property="currLocButton" destination="j0d-ad-tfV" id="p40-MO-rrk"/>
                         <outlet property="directionsContainer" destination="OuZ-kI-V3u" id="f1H-Mq-02z"/>
                         <outlet property="helpButton" destination="lK3-pu-08l" id="C1d-0j-dZq"/>

@@ -37,7 +37,7 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
     @IBOutlet weak var directionsContainer: UIView!
     @IBOutlet weak var currLocButton: LGButton!
     @IBOutlet weak var helpButton: LGButton!
-    
+    @IBOutlet weak var changeOriginButton: LGButton!
     @IBOutlet weak var referButton: LGButton!
     var segmentedControl: TwicketSegmentedControl!
     
@@ -58,9 +58,11 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
     
     //MARK: MAP STATE
     var visibleAnnotations: [MGLAnnotation] = []
+    var settingOrigin = false
     
     //MARK: ROUTE PREVIEW STATE
     var parentPageViewController: ParentPageViewController! = nil
+    var currentDestLngLat: [Double]! = []
     
     var deviceId: String?
     var accessCode: String?
@@ -84,6 +86,16 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
         whereToButtonPressedGesture.numberOfTouchesRequired = 1
         whereToButton.addGestureRecognizer(whereToButtonPressedGesture)
         whereToButton.isUserInteractionEnabled = true
+        
+        //MARK: CHANGE ORIGIN BUTTON INIT
+        var changeOriginButtonPressedGesture = UITapGestureRecognizer()
+        changeOriginButtonPressedGesture = UITapGestureRecognizer(target: self, action: #selector(MapController.changeOriginPressed(_:)))
+        changeOriginButtonPressedGesture.numberOfTapsRequired = 1
+        changeOriginButtonPressedGesture.numberOfTouchesRequired = 1
+        changeOriginButton.addGestureRecognizer(changeOriginButtonPressedGesture)
+        changeOriginButton.isUserInteractionEnabled = false
+        changeOriginButton.isEnabled = false
+        changeOriginButton.bgColor = UIColor.lightGray
         
         //MARK: HELP BUTTON INIT
         var helpPressedGesture = UITapGestureRecognizer()
@@ -208,7 +220,7 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
         visibleAnnotations = annotations
     }
     
-    func getRoute(fromLat: Double, fromLng: Double, toLat: Double, toLng: Double, routeType: String) {
+    func getRoute(fromLat: Double, fromLng: Double, toLat: Double, toLng: Double) {
         let group = DispatchGroup()
         
         let driveBikeUrl = getRoutingURL(routeType: "get_drive_bike_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "0", deviceId: deviceId ?? "0")
@@ -265,6 +277,8 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
                 self.switchRoute(index: 0, initRouteInfoView: true)
                 self.segmentedControl.fadeIn()
                 self.directionsContainer.fadeIn()
+                self.changeOriginButton.isUserInteractionEnabled = true
+                self.changeOriginButton.bgColor = UIColor(red:0.24, green:0.77, blue:1.00, alpha:1.0)
             }
         }
     }
@@ -431,6 +445,14 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
         print("currLocPressed")
     }
     
+    @objc func changeOriginPressed(_ sender: UITapGestureRecognizer) {
+        settingOrigin = true
+        let autocompleteController = GMSAutocompleteViewController()
+        autocompleteController.delegate = self
+        present(autocompleteController, animated: true, completion: nil)
+        changeOriginButton.isLoading = true
+    }
+    
     func currLocToggle() {
         currLocationEnabled = !currLocationEnabled;
         if (currLocationEnabled) {
@@ -483,9 +505,17 @@ extension MapController: GMSAutocompleteViewControllerDelegate {
     
     // Handle the user's selection.
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
-        dismiss(animated: true, completion: nil)
-        clearMap()
-        getRoute(fromLat: currentLat, fromLng: currentLng, toLat: place.coordinate.latitude, toLng: place.coordinate.longitude, routeType: "get_drive_bike_route");
+        if (settingOrigin) {
+            dismiss(animated: true, completion: nil)
+            clearMap()
+            getRoute(fromLat: place.coordinate.latitude, fromLng: place.coordinate.longitude, toLat: currentDestLngLat[1], toLng: currentDestLngLat[0]);
+        } else {
+            dismiss(animated: true, completion: nil)
+            clearMap()
+            currentDestLngLat = [place.coordinate.longitude, place.coordinate.latitude]
+            getRoute(fromLat: currentLat, fromLng: currentLng, toLat: place.coordinate.latitude, toLng: place.coordinate.longitude);
+        }
+        
     }
     
     func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
@@ -493,7 +523,12 @@ extension MapController: GMSAutocompleteViewControllerDelegate {
     
     // User canceled the operation.
     func wasCancelled(_ viewController: GMSAutocompleteViewController) {
-        self.whereToButton.isLoading = false
+        if (settingOrigin) {
+            self.changeOriginButton.isLoading = false
+            settingOrigin = false
+        } else {
+            self.whereToButton.isLoading = false
+        }
         dismiss(animated: true, completion: nil)
     }
     
