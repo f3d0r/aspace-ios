@@ -12,6 +12,11 @@
 		A32BBE16218BA02E007932C9 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32BBE15218BA02E007932C9 /* UserDefaults.swift */; };
 		A332ADA22187D9DA00F40117 /* LngLat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A332ADA12187D9DA00F40117 /* LngLat.swift */; };
 		A332ADAA2189781600F40117 /* ParentPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A332ADA92189781600F40117 /* ParentPageViewController.swift */; };
+		A33A9F9F218D59BD00D85AA1 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33A9F9E218D59BD00D85AA1 /* OnboardingViewController.swift */; };
+		A33A9FA5218D5AB600D85AA1 /* Nunito-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A33A9FA1218D5AB500D85AA1 /* Nunito-Bold.ttf */; };
+		A33A9FA6218D5AB600D85AA1 /* Nunito-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A33A9FA2218D5AB500D85AA1 /* Nunito-Light.ttf */; };
+		A33A9FA7218D5AB600D85AA1 /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A33A9FA3218D5AB500D85AA1 /* OpenSans-Regular.ttf */; };
+		A33A9FA8218D5AB600D85AA1 /* Nunito-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A33A9FA4218D5AB600D85AA1 /* Nunito-Regular.ttf */; };
 		A34D5B0C2162BAB200A9082E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34D5B0B2162BAB200A9082E /* AppDelegate.swift */; };
 		A34D5B0E2162BAB200A9082E /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34D5B0D2162BAB200A9082E /* MapController.swift */; };
 		A34D5B112162BAB200A9082E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A34D5B0F2162BAB200A9082E /* Main.storyboard */; };
@@ -54,6 +59,11 @@
 		A32BBE15218BA02E007932C9 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		A332ADA12187D9DA00F40117 /* LngLat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LngLat.swift; sourceTree = "<group>"; };
 		A332ADA92189781600F40117 /* ParentPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentPageViewController.swift; sourceTree = "<group>"; };
+		A33A9F9E218D59BD00D85AA1 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
+		A33A9FA1218D5AB500D85AA1 /* Nunito-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-Bold.ttf"; sourceTree = "<group>"; };
+		A33A9FA2218D5AB500D85AA1 /* Nunito-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-Light.ttf"; sourceTree = "<group>"; };
+		A33A9FA3218D5AB500D85AA1 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
+		A33A9FA4218D5AB600D85AA1 /* Nunito-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-Regular.ttf"; sourceTree = "<group>"; };
 		A34D5B082162BAB200A9082E /* aspace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = aspace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A34D5B0B2162BAB200A9082E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A34D5B0D2162BAB200A9082E /* MapController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
@@ -128,6 +138,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		A33A9FA0218D5A9300D85AA1 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				A33A9FA1218D5AB500D85AA1 /* Nunito-Bold.ttf */,
+				A33A9FA2218D5AB500D85AA1 /* Nunito-Light.ttf */,
+				A33A9FA4218D5AB600D85AA1 /* Nunito-Regular.ttf */,
+				A33A9FA3218D5AB500D85AA1 /* OpenSans-Regular.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		A3410457218188C90087D6B2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -141,6 +162,7 @@
 		A34D5AFF2162BAB200A9082E = {
 			isa = PBXGroup;
 			children = (
+				A33A9FA0218D5A9300D85AA1 /* Fonts */,
 				A34D5B0A2162BAB200A9082E /* aspace */,
 				9296166AD1ED506CEE650907 /* Frameworks */,
 				A34D5B1F2162BAB200A9082E /* aspaceTests */,
@@ -166,6 +188,7 @@
 				A3410457218188C90087D6B2 /* Models */,
 				A3694B422163295B003354DD /* Settings.bundle */,
 				A34D5B0B2162BAB200A9082E /* AppDelegate.swift */,
+				A33A9F9E218D59BD00D85AA1 /* OnboardingViewController.swift */,
 				A3694B47216333D1003354DD /* LoginPhoneViewController.swift */,
 				A3694B492163589D003354DD /* LoginPinViewController.swift */,
 				A3C1FDA7216C095C00F312FB /* Assets.xcassets */,
@@ -313,6 +336,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				A3694B432163295B003354DD /* Settings.bundle in Resources */,
+				A33A9FA5218D5AB600D85AA1 /* Nunito-Bold.ttf in Resources */,
+				A33A9FA8218D5AB600D85AA1 /* Nunito-Regular.ttf in Resources */,
+				A33A9FA6218D5AB600D85AA1 /* Nunito-Light.ttf in Resources */,
+				A33A9FA7218D5AB600D85AA1 /* OpenSans-Regular.ttf in Resources */,
 				A34D5B162162BAB200A9082E /* LaunchScreen.storyboard in Resources */,
 				A3C1FDA8216C095C00F312FB /* Assets.xcassets in Resources */,
 				A34D5B112162BAB200A9082E /* Main.storyboard in Resources */,
@@ -376,6 +403,7 @@
 				"${BUILT_PRODUCTS_DIR}/Polyline/Polyline.framework",
 				"${BUILT_PRODUCTS_DIR}/PopupDialog/PopupDialog.framework",
 				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
+				"${BUILT_PRODUCTS_DIR}/RAMReel/RAMReel.framework",
 				"${BUILT_PRODUCTS_DIR}/RxAtomic/RxAtomic.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework",
@@ -425,6 +453,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Polyline.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PopupDialog.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RAMReel.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxAtomic.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxDataSources.framework",
@@ -538,6 +567,7 @@
 				A3694B48216333D1003354DD /* LoginPhoneViewController.swift in Sources */,
 				A32BBE16218BA02E007932C9 /* UserDefaults.swift in Sources */,
 				A3C9D9F72183C9DD00106143 /* DirectionsViewController.swift in Sources */,
+				A33A9F9F218D59BD00D85AA1 /* OnboardingViewController.swift in Sources */,
 				A3903F1A218265D60027068E /* RoutingResponse.swift in Sources */,
 				A332ADAA2189781600F40117 /* ParentPageViewController.swift in Sources */,
 			);

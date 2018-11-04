@@ -318,6 +318,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="MainLogo" translatesAutoresizingMaskIntoConstraints="NO" id="45C-Ic-Dnd" userLabel="Logo">
+                                <rect key="frame" x="125" y="72" width="125" height="125"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="45C-Ic-Dnd" secondAttribute="height" multiplier="1:1" id="C0h-Aa-h6Q"/>
+                                    <constraint firstAttribute="height" constant="125" id="Pp0-TN-I0s"/>
+                                    <constraint firstAttribute="width" constant="125" id="d2N-zG-hbZ"/>
+                                </constraints>
+                            </imageView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" editable="NO" text="Please login." textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Beq-ud-JSV" userLabel="Please Login Text">
                                 <rect key="frame" x="129" y="287" width="117" height="40"/>
                                 <constraints>
@@ -350,14 +358,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="MainLogo" translatesAutoresizingMaskIntoConstraints="NO" id="45C-Ic-Dnd" userLabel="Logo">
-                                <rect key="frame" x="125" y="72" width="125" height="125"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="45C-Ic-Dnd" secondAttribute="height" multiplier="1:1" id="C0h-Aa-h6Q"/>
-                                    <constraint firstAttribute="height" constant="125" id="Pp0-TN-I0s"/>
-                                    <constraint firstAttribute="width" constant="125" id="d2N-zG-hbZ"/>
-                                </constraints>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.51087063550949097" green="0.87767475843429565" blue="0.97876149415969849" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -485,6 +485,21 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TNS-8v-Y1W" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1220" y="-871"/>
+        </scene>
+        <!--Onboarding View Controller-->
+        <scene sceneID="mta-Je-eLt">
+            <objects>
+                <viewController storyboardIdentifier="OnboardingViewController" id="jmq-kA-rdh" customClass="OnboardingViewController" customModule="aspace" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="LTw-Kn-531">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="njW-xM-jZD"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nm7-sq-69g" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1033" y="-716"/>
         </scene>
     </scenes>
     <resources>

@@ -69,6 +69,7 @@ PODS:
     - Alamofire (~> 4.0)
     - PromiseKit/CorePromise
   - PromiseKit/CorePromise (6.5.2)
+  - RAMReel (4.0.0)
   - RxAtomic (4.4.0)
   - RxCocoa (4.4.0):
     - RxSwift (~> 4.0)
@@ -119,6 +120,7 @@ DEPENDENCIES:
   - PopupDialog
   - PromiseKit/Alamofire
   - PromiseKit/CorePromise
+  - RAMReel
   - SHSearchBar
   - SwiftLint
   - SwiftMessages
@@ -163,6 +165,7 @@ SPEC REPOS:
     - Polyline
     - PopupDialog
     - PromiseKit
+    - RAMReel
     - RxAtomic
     - RxCocoa
     - RxDataSources
@@ -213,6 +216,7 @@ SPEC CHECKSUMS:
   Polyline: 3d69f75bb136357e27291d439d0436c6ebda57a4
   PopupDialog: 03985b669c29802661c187513bf827340db1ae4d
   PromiseKit: 27c1601bfb73405871b805bcb8cf7e55c4dad3db
+  RAMReel: 815addc9594886e6816b891a1559058f05ff9580
   RxAtomic: eacf60db868c96bfd63320e28619fe29c179656f
   RxCocoa: df63ebf7b9a70d6b4eeea407ed5dd4efc8979749
   RxDataSources: a843bad90c29817f5923ec8163f4af2de084ceb3
@@ -226,6 +230,6 @@ SPEC CHECKSUMS:
   Turf: 9763a5a2d7da05dfdd5ed56aeb0414b291b0fee1
   TwicketSegmentedControl: 6d7a4cf243657e0ac3f00d06d873a25334c04042
 
-PODFILE CHECKSUM: 8e26b2c7249093c5b215f4646de8835a6dcc083d
+PODFILE CHECKSUM: 12fcf447455534ac3691bfcdcd1c687e869da200
 
 COCOAPODS: 1.6.0.beta.2

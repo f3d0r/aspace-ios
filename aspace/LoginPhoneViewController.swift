@@ -93,13 +93,11 @@ class LoginPhoneViewController: UIViewController {
     }
     
     @IBAction func straightToMapPressed(_ sender: Any) {
-        if (!UserDefaults.standard.bool(forKey: "USER_REGISTERED")) {
-            Intercom.registerUnidentifiedUser()
-            UserDefaults.standard.set(true, forKey: "USER_REGISTERED")
-        }
+        let deviceId = UIDevice.current.identifierForVendor!.uuidString
+        Intercom.registerUser(withUserId: deviceId)
         let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let newViewController = storyBoard.instantiateViewController(withIdentifier: "mapViewController") as! MapController
-        newViewController.deviceId = UIDevice.current.identifierForVendor!.uuidString
+        
         self.present(newViewController, animated: true, completion: nil)
     }
 }

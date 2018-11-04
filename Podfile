@@ -37,6 +37,7 @@ target 'aspace' do
     pod 'FlagPhoneNumber'
     pod 'DigitInputView'
     pod 'PMSuperButton'
+    pod 'RAMReel'
 
     target 'aspaceTests' do
         inherit! :search_paths
