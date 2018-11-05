@@ -121,7 +121,7 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
         referButton.addGestureRecognizer(referButtonPressedGesture)
         referButton.isUserInteractionEnabled = true
         
-        
+        //MARK: LOCATATION MANAGER INIT
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
@@ -221,6 +221,10 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
     }
     
     func getRoute(fromLat: Double, fromLng: Double, toLat: Double, toLng: Double) {
+        self.whereToButton.isUserInteractionEnabled = false
+        self.whereToButton.isEnabled = false
+        self.changeOriginButton.isUserInteractionEnabled = false
+        self.changeOriginButton.isEnabled = false
         let group = DispatchGroup()
         
         let driveBikeUrl = getRoutingURL(routeType: "get_drive_bike_route", originLat: fromLat, originLng: fromLng, destLat: toLat, destLng: toLng, sessionStarting: "0", accessCode: accessCode ?? "0", deviceId: deviceId ?? "0")
@@ -265,6 +269,11 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
         
         group.notify(queue: .main) {
             self.whereToButton.isLoading = false
+            self.whereToButton.isUserInteractionEnabled = true
+            self.whereToButton.isEnabled = true
+            self.changeOriginButton.isUserInteractionEnabled = true
+            self.changeOriginButton.isEnabled = true
+            self.changeOriginButton.isLoading = false
             if (driveBikeResponse.resInfo?.code == 42 || driveWalkResponse.resInfo?.code == 42 || driveDirectResponse.resInfo?.code == 42) {
                 self.sendErrorMessage(title: "Error", message: "Looks like we there's no parking available with aspace here. Please try a different address.")
             } else if (driveBikeResponse.resInfo?.code == 45 || driveWalkResponse.resInfo?.code == 45 || driveDirectResponse.resInfo?.code == 45) {
@@ -278,6 +287,7 @@ class MapController: UIViewController, MGLMapViewDelegate, CLLocationManagerDele
                 self.segmentedControl.fadeIn()
                 self.directionsContainer.fadeIn()
                 self.changeOriginButton.isUserInteractionEnabled = true
+                self.changeOriginButton.isEnabled = true
                 self.changeOriginButton.bgColor = UIColor(red:0.24, green:0.77, blue:1.00, alpha:1.0)
             }
         }
