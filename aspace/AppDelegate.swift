@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         
-        GMSPlacesClient.provideAPIKey("***REMOVED***")
+        GMSPlacesClient.provideAPIKey("AIzaSyDLfswWwzcnWIwQ9GMvXDYjbhQY6QUduSA")
         if (Defaults.getUserSession.isValid()) {
             let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let mapController: MapController = mainStoryboard.instantiateViewController(withIdentifier: "mapViewController") as! MapController
